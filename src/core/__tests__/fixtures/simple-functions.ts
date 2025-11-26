@@ -15,6 +15,7 @@ export async function fetchData(_url: string): Promise<string> {
 }
 
 // This should NOT be extracted (not exported)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function _privateHelper(): void {
   console.log('private');
 }

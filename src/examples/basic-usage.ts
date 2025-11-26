@@ -11,7 +11,7 @@ import { ASTAnalyzer } from '../core/ast-analyzer';
 import { SignatureHasher } from '../core/signature-hasher';
 
 // Example 1: Analyzing TypeScript code
-function example1_analyzeCode() {
+function example1_analyzeCode(): void {
   console.log('=== Example 1: Analyzing TypeScript Code ===\n');
 
   const analyzer = new ASTAnalyzer();
@@ -38,7 +38,7 @@ function example1_analyzeCode() {
 }
 
 // Example 2: Generating and comparing hashes
-function example2_hashSignatures() {
+function example2_hashSignatures(): void {
   console.log('=== Example 2: Hash Generation ===\n');
 
   const analyzer = new ASTAnalyzer();
@@ -74,7 +74,7 @@ function example2_hashSignatures() {
 }
 
 // Example 3: Detecting drift in a file
-function example3_detectDrift() {
+function example3_detectDrift(): void {
   console.log('=== Example 3: Drift Detection ===\n');
 
   const analyzer = new ASTAnalyzer();

@@ -1,4 +1,13 @@
-import { Project, SourceFile, SyntaxKind } from 'ts-morph';
+import {
+  Project,
+  SourceFile,
+  SyntaxKind,
+  Node,
+  ClassDeclaration,
+  MethodDeclaration,
+  ParameterDeclaration,
+  PropertyDeclaration
+} from 'ts-morph';
 import { CodeSignature, SymbolType } from './types';
 
 /**
@@ -139,10 +148,12 @@ export class ASTAnalyzer {
     return signatures;
   }
 
-  private isExported(node: any): boolean {
+  private isExported(node: Node): boolean {
     // Use ts-morph's built-in isExported method if available
-    if (typeof node.isExported === 'function') {
-      return node.isExported();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (typeof (node as any).isExported === 'function') {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (node as any).isExported();
     }
 
     // Fallback: check for export keyword
@@ -155,15 +166,15 @@ export class ASTAnalyzer {
     return match ? this.normalizeText(match[0]) : this.normalizeText(text);
   }
 
-  private normalizeClassSignature(cls: any): string {
+  private normalizeClassSignature(cls: ClassDeclaration): string {
     // Extract class header and public methods/properties
     const className = cls.getName();
     const methods = cls
       .getMethods()
-      .filter((m: any) => !m.hasModifier(SyntaxKind.PrivateKeyword))
-      .map((m: any) => {
+      .filter((m: MethodDeclaration) => !m.hasModifier(SyntaxKind.PrivateKeyword))
+      .map((m: MethodDeclaration) => {
         const name = m.getName();
-        const params = m.getParameters().map((p: any) => {
+        const params = m.getParameters().map((p: ParameterDeclaration) => {
           const paramName = p.getName();
           const paramType = p.getType().getText();
           return `${paramName}: ${paramType}`;
@@ -174,8 +185,8 @@ export class ASTAnalyzer {
 
     const properties = cls
       .getProperties()
-      .filter((p: any) => !p.hasModifier(SyntaxKind.PrivateKeyword))
-      .map((p: any) => {
+      .filter((p: PropertyDeclaration) => !p.hasModifier(SyntaxKind.PrivateKeyword))
+      .map((p: PropertyDeclaration) => {
         const name = p.getName();
         const type = p.getType().getText();
         return `${name}: ${type}`;
@@ -191,7 +202,7 @@ export class ASTAnalyzer {
       .replace(/\/\*[\s\S]*?\*\//g, '') // Remove multi-line comments
       .replace(/\/\/.*/g, '') // Remove single-line comments
       .replace(/\s+/g, ' ') // Normalize whitespace to single space
-      .replace(/\s*([:()\[\]{},;])\s*/g, '$1') // Remove whitespace around punctuation
+      .replace(/\s*([:()[\]{},;])\s*/g, '$1') // Remove whitespace around punctuation
       .replace(/\s*:\s*/g, ': ') // Ensure consistent spacing after colons
       .replace(/,\s*/g, ', ') // Ensure consistent spacing after commas
       .trim();

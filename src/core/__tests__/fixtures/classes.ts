@@ -39,6 +39,7 @@ export class User {
 }
 
 // Not exported - should be ignored
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 class _InternalService {
   process(): void {}
 }

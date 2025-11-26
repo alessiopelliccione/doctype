@@ -35,6 +35,7 @@ export enum Priority {
 }
 
 // Not exported
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface _InternalConfig {
   secret: string;
 }
@@ -44,4 +45,5 @@ export const API_URL = 'https://api.example.com';
 export const DEFAULT_TIMEOUT = 5000;
 
 // Not exported
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const _INTERNAL_KEY = 'secret';
