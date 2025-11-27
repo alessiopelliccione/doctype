@@ -28,7 +28,7 @@
     "automation",
     "drift-detection"
   ],
-  "author": "",
+  "author": "doctypedev",
   "license": "MIT",
   "dependencies": {
     "@types/uuid": "^10.0.0",
