@@ -5,14 +5,93 @@ Safely injects AI-generated content into Markdown files within Doctype anchor bo
 ## Overview
 
 <!-- doctype:start id="b6c7d8e9-f0a1-4b2c-3d4e-5f6a7b8c9d0e" code_ref="src/content/content-injector.ts#ContentInjector" -->
-The ContentInjector class provides safe content injection into Markdown files. It replaces content between Doctype anchor tags while preserving the anchor comments themselves.
+# `ContentInjector` Class
 
-Key features:
-- Preserves anchor structure and IDs
-- Preview mode (dry-run without file writes)
-- Batch injection support
-- Anchor validation before injection
-- Detailed injection reports
+The `ContentInjector` class provides methods for injecting content into files or strings at specific anchor points. It also provides methods for previewing the results of these injections, validating anchors, and retrieving the location of anchors within files or strings.
+
+## Methods
+
+### `injectIntoFile(filePath: string, anchorId: string, newContent: string, writeToFile: boolean): InjectionResult`
+
+Injects `newContent` at the location of `anchorId` within the file specified by `filePath`. If `writeToFile` is `true`, the changes are written directly to the file.
+
+- `filePath: string` - The path to the file where the content will be injected.
+- `anchorId: string` - The identifier of the anchor where the content will be injected.
+- `newContent: string` - The content to be injected.
+- `writeToFile: boolean` - If `true`, the file will be updated with the new content.
+
+Returns an `InjectionResult` object representing the result of the injection.
+
+### `injectIntoContent(content: string, anchorId: string, newContent: string): InjectionResult`
+
+Injects `newContent` at the location of `anchorId` within the provided `content` string.
+
+- `content: string` - The string where the content will be injected.
+- `anchorId: string` - The identifier of the anchor where the content will be injected.
+- `newContent: string` - The content to be injected.
+
+Returns an `InjectionResult` object representing the result of the injection.
+
+### `injectMultiple(filePath: string, injections: Map<string, string>, writeToFile: boolean): InjectionResult[]`
+
+Injects multiple content strings at their corresponding anchor locations within the file specified by `filePath`. If `writeToFile` is `true`, the changes are written directly to the file.
+
+- `filePath: string` - The path to the file where the content will be injected.
+- `injections: Map<string, string>` - A map where the keys are anchor identifiers and the values are the corresponding content strings to be injected.
+- `writeToFile: boolean` - If `true`, the file will be updated with the new content.
+
+Returns an array of `InjectionResult` objects representing the results of the injections.
+
+### `preview(filePath: string, anchorId: string, newContent: string): InjectionResult`
+
+Previews the result of injecting `newContent` at the location of `anchorId` within the file specified by `filePath` without actually modifying the file.
+
+- `filePath: string` - The path to the file where the content will be injected.
+- `anchorId: string` - The identifier of the anchor where the content will be injected.
+- `newContent: string` - The content to be injected.
+
+Returns an `InjectionResult` object representing the result of the injection.
+
+### `getAnchorLocation(filePath: string, anchorId: string): {startLine: number, endLine: number}`
+
+Retrieves the location of `anchorId` within the file specified by `filePath`.
+
+- `filePath: string` - The path to the file where the anchor is located.
+- `anchorId: string` - The identifier of the anchor.
+
+Returns an object with `startLine` and `endLine` properties representing the start and end lines of the anchor within the file.
+
+### `getAnchorLocationFromContent(content: string, anchorId: string): {startLine: number, endLine: number}`
+
+Retrieves the location of `anchorId` within the provided `content` string.
+
+- `content: string` - The string where the anchor is located.
+- `anchorId: string` - The identifier of the anchor.
+
+Returns an object with `startLine` and `endLine` properties representing the start and end lines of the anchor within the string.
+
+### `validateAnchor(content: string, anchorId: string): string[]`
+
+Validates the existence of `anchorId` within the provided `content` string.
+
+- `content: string` - The string where the anchor is located.
+- `anchorId: string` - The identifier of the anchor.
+
+Returns an array of error messages if the anchor is not valid, or an empty array if the anchor is valid.
+
+## Usage Example
+
+```typescript
+const injector = new ContentInjector();
+const filePath = './test.txt';
+const anchorId = 'anchor1';
+const newContent = 'New content to be injected';
+
+// Inject new content into file
+const result = injector.injectIntoFile(filePath, anchorId, newContent, true);
+
+console.log(result); // Logs the InjectionResult object
+```
 <!-- doctype:end id="b6c7d8e9-f0a1-4b2c-3d4e-5f6a7b8c9d0e" -->
 
 ## Installation

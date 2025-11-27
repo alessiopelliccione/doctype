@@ -5,13 +5,126 @@ Manages the doctype-map.json file - the single source of truth for Doctype ancho
 ## Overview
 
 <!-- doctype:start id="d6e7f8a9-b0c1-4d2e-3f4a-5b6c7d8e9f0a" code_ref="src/content/map-manager.ts#DoctypeMapManager" -->
-The DoctypeMapManager class provides CRUD operations for the doctype-map.json file. This file tracks all documentation anchors, their associated code references, signature hashes, and original content.
+# `DoctypeMapManager` Class
 
-Key responsibilities:
-- Load and save doctype-map.json
-- Add, update, query, and remove entries
-- Detect drift by comparing current vs saved hashes
-- Maintain data integrity and handle errors
+The `DoctypeMapManager` class provides methods to manage a collection of `DoctypeMapEntry` objects. It allows you to add, update, remove entries, and perform various queries on the collection.
+
+## Methods
+
+### `save(): void`
+
+This method saves the current state of the `DoctypeMapManager` instance. It does not take any parameters and does not return any value.
+
+### `getEntries(): DoctypeMapEntry[]`
+
+This method returns all entries in the `DoctypeMapManager` instance.
+
+**Returns:** An array of `DoctypeMapEntry` objects.
+
+### `getEntryById(id: string): DoctypeMapEntry`
+
+This method retrieves a specific entry by its ID.
+
+**Parameters:**
+- `id: string` - The ID of the entry to retrieve.
+
+**Returns:** The `DoctypeMapEntry` object with the specified ID.
+
+### `getEntriesByCodeRef(filePath: string, symbolName: string): DoctypeMapEntry[]`
+
+This method retrieves entries by their code reference.
+
+**Parameters:**
+- `filePath: string` - The file path of the code reference.
+- `symbolName: string` - The symbol name of the code reference.
+
+**Returns:** An array of `DoctypeMapEntry` objects that match the specified code reference.
+
+### `getEntriesByDocFile(filePath: string): DoctypeMapEntry[]`
+
+This method retrieves entries by their documentation file.
+
+**Parameters:**
+- `filePath: string` - The file path of the documentation file.
+
+**Returns:** An array of `DoctypeMapEntry` objects that match the specified documentation file.
+
+### `addEntry(entry: DoctypeMapEntry): void`
+
+This method adds a new entry to the `DoctypeMapManager` instance.
+
+**Parameters:**
+- `entry: DoctypeMapEntry` - The entry to add.
+
+### `updateEntry(id: string, updates: Partial<DoctypeMapEntry>): void`
+
+This method updates an existing entry in the `DoctypeMapManager` instance.
+
+**Parameters:**
+- `id: string` - The ID of the entry to update.
+- `updates: Partial<DoctypeMapEntry>` - An object containing the fields to update.
+
+### `removeEntry(id: string): boolean`
+
+This method removes an entry from the `DoctypeMapManager` instance.
+
+**Parameters:**
+- `id: string` - The ID of the entry to remove.
+
+**Returns:** A boolean indicating whether the removal was successful.
+
+### `hasDrift(id: string, currentHash: string): boolean`
+
+This method checks if an entry has drifted.
+
+**Parameters:**
+- `id: string` - The ID of the entry to check.
+- `currentHash: string` - The current hash of the entry.
+
+**Returns:** A boolean indicating whether the entry has drifted.
+
+### `getDriftedEntries(currentHashes: Map<string, string>): DoctypeMapEntry[]`
+
+This method retrieves all entries that have drifted.
+
+**Parameters:**
+- `currentHashes: Map<string, string>` - A map of current hashes.
+
+**Returns:** An array of `DoctypeMapEntry` objects that have drifted.
+
+### `getEntryCount(): number`
+
+This method returns the number of entries in the `DoctypeMapManager` instance.
+
+**Returns:** The number of entries.
+
+### `clear(): void`
+
+This method clears all entries in the `DoctypeMapManager` instance. It does not take any parameters and does not return any value.
+
+### `getVersion(): string`
+
+This method returns the version of the `DoctypeMapManager` instance.
+
+**Returns:** The version as a string.
+
+### `export(): DoctypeMap`
+
+This method exports the current state of the `DoctypeMapManager` instance.
+
+**Returns:** A `DoctypeMap` object representing the current state.
+
+## Example Usage
+
+```typescript
+const manager = new DoctypeMapManager();
+manager.addEntry(new DoctypeMapEntry('id1', 'filePath1', 'symbolName1', 'docFilePath1', 'hash1'));
+manager.addEntry(new DoctypeMapEntry('id2', 'filePath2', 'symbolName2', 'docFilePath2', 'hash2'));
+console.log(manager.getEntryCount()); // Outputs: 2
+console.log(manager.getEntryById('id1')); // Outputs: DoctypeMapEntry object with id 'id1'
+manager.removeEntry('id1');
+console.log(manager.getEntryCount()); // Outputs: 1
+```
 <!-- doctype:end id="d6e7f8a9-b0c1-4d2e-3f4a-5b6c7d8e9f0a" -->
 
 ## Installation
