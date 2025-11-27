@@ -4,6 +4,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doctypedev/doctype.git"
+  },
   "description": "The Self-Maintaining Documentation System - Automatically update documentation when code changes",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
