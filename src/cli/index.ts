@@ -10,6 +10,9 @@
  * Phase 4: Now with AI-powered documentation generation using OpenAI or Gemini APIs
  */
 
+// Load environment variables from .env file
+import 'dotenv/config';
+
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { checkCommand } from './check';
