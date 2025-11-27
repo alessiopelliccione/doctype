@@ -1,14 +1,12 @@
 name: Doctype - Documentation Drift Detection
 
 on:
-  # Run after CI workflow completes successfully
-  workflow_run:
-    workflows: ["CI"]
-    types: [completed]
-    branches: [main, develop]
-
-  # Also allow manual trigger
-  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   doctype-check:
