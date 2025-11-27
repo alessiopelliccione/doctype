@@ -16,9 +16,10 @@
     "test:ui": "vitest --ui",
     "lint": "eslint src --ext .ts",
     "clean": "rm -rf dist",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "generate:sidebar": "tsx docs/scripts/generateSidebar.ts",
+    "docs:dev": "npm run generate:sidebar && vitepress dev docs",
+    "docs:build": "npm run generate:sidebar && vitepress build docs",
+    "docs:preview": "npm run generate:sidebar && vitepress preview docs"
   },
   "keywords": [
     "documentation",
@@ -45,8 +46,10 @@
     "@vitest/coverage-v8": "^1.1.0",
     "@vitest/ui": "^1.1.0",
     "eslint": "^8.56.0",
+    "glob": "^13.0.0",
     "typescript": "^5.3.3",
     "vite": "^5.0.10",
+    "tsx": "^4.19.2",
     "vitepress": "^1.6.4",
     "vitest": "^1.1.0",
     "vue": "^3.5.25"
