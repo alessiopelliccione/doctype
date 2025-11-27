@@ -5,7 +5,7 @@
 /**
  * Authenticates a user with email and password
  */
-export function login(email: string, password: string): string {
+export function login(_email: string, _password: string): string {
   // Authentication logic here
   return 'auth-token-123';
 }

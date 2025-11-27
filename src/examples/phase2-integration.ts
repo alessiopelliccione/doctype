@@ -15,7 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 /**
  * Example workflow for managing documentation
  */
-export function exampleWorkflow() {
+export function exampleWorkflow(): void {
   console.log('=== Doctype Phase 2 Integration Example ===\n');
 
   // Step 1: Parse markdown files to find all anchors

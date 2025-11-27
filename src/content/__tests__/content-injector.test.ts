@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { ContentInjector } from '../content-injector';
-import { writeFileSync, existsSync, unlinkSync } from 'fs';
+import { writeFileSync, existsSync, unlinkSync, readFileSync } from 'fs';
 
 describe('ContentInjector', () => {
   const injector = new ContentInjector();
@@ -12,7 +12,7 @@ describe('ContentInjector', () => {
     }
   });
 
-  const createTestContent = () => `# Test Document
+  const createTestContent = (): string => `# Test Document
 
 <!-- doctype:start id="test-anchor" code_ref="src/test.ts#testFunc" -->
 Old content here
@@ -97,7 +97,7 @@ More content below.`;
 
       injector.injectIntoFile(testFilePath, 'test-anchor', 'New content', false);
 
-      const currentContent = require('fs').readFileSync(testFilePath, 'utf-8');
+      const currentContent = readFileSync(testFilePath, 'utf-8');
       expect(currentContent).toBe(originalContent);
     });
   });
@@ -149,7 +149,7 @@ Old B
       expect(result.success).toBe(true);
       expect(result.content).toContain('Preview content');
 
-      const fileContent = require('fs').readFileSync(testFilePath, 'utf-8');
+      const fileContent = readFileSync(testFilePath, 'utf-8');
       expect(fileContent).toBe(originalContent);
     });
   });
