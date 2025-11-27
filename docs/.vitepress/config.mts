@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import { autoSidebar } from './sidebar-auto';
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -13,41 +14,7 @@ export default defineConfig({
       { text: 'Documentation', link: '/guide/getting-started' }
     ],
 
-    sidebar: [
-      {
-        text: 'Introduction',
-        collapsed: false,
-        items: [
-          { text: 'Getting Started', link: '/guide/getting-started' },
-          { text: 'Core Concepts', link: '/guide/core-concepts' }
-        ]
-      },
-      {
-        text: 'CLI Commands',
-        collapsed: false,
-        items: [
-          { text: 'doctype check', link: '/cli/check' },
-          { text: 'doctype fix', link: '/cli/fix' }
-        ]
-      },
-      {
-        text: 'Core Modules',
-        collapsed: false,
-        items: [
-          { text: 'ASTAnalyzer', link: '/api/ast-analyzer' },
-          { text: 'SignatureHasher', link: '/api/signature-hasher' }
-        ]
-      },
-      {
-        text: 'Content & Mapping',
-        collapsed: false,
-        items: [
-          { text: 'MarkdownParser', link: '/api/markdown-parser' },
-          { text: 'DoctypeMapManager', link: '/api/map-manager' },
-          { text: 'ContentInjector', link: '/api/content-injector' }
-        ]
-      }
-    ],
+    sidebar: autoSidebar,
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/alessiopelliccione/doctype' }
