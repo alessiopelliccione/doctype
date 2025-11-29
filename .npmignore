@@ -70,6 +70,7 @@ node_modules/
 
 # Example and test data
 doctype-map.json
+doctype.config.json
 examples/
 fixtures/
 
