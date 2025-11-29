@@ -43,7 +43,7 @@ npm install -g @doctypedev/doctype
 ### 2. Initialize Tracking
 
 ```bash
-npx doctype init
+doctype init
 ```
 
 This will:
@@ -69,7 +69,7 @@ Authenticates a user with email.
 ### 3. Check for Drift
 
 ```bash
-npx doctype check
+doctype check
 ```
 
 **Output:**
@@ -88,7 +88,7 @@ Change your code:
 
 Run fix:
 ```bash
-npx doctype fix
+doctype fix
 ```
 
 **Result:**
@@ -118,12 +118,12 @@ const token = await login('user@example.com', 'securePassword123');
 
 ## Commands
 
-### `npx doctype init`
+### `doctype init`
 
 Initialize doctype in your project with an interactive setup process.
 
 ```bash
-npx doctype init
+doctype init
 ```
 
 **What it does:**
@@ -136,12 +136,12 @@ npx doctype init
 7. Creates `doctype.config.json` with project configuration (commit this)
 8. Optionally configures your OpenAI API key
 
-### `npx doctype check`
+### `doctype check`
 
 Verify documentation is in sync with code. Perfect for CI/CD.
 
 ```bash
-npx doctype check --verbose
+doctype check --verbose
 ```
 
 **Exit codes:**
@@ -157,12 +157,12 @@ npx doctype check --verbose
     Cause: Function signature changed
 ```
 
-### `npx doctype fix`
+### `doctype fix`
 
 Update documentation to match code changes using AI.
 
 ```bash
-npx doctype fix --auto-commit
+doctype fix --auto-commit
 ```
 
 **Options:**
@@ -189,7 +189,7 @@ npx doctype fix --auto-commit
 >
 > Basic usage in CI:
 > ```bash
-> npx doctype check  # Fails with exit code 1 if drift detected
+> doctype check  # Fails with exit code 1 if drift detected
 > ```
 
 ---
@@ -293,7 +293,7 @@ export function processPayment(
 ### Doctype Detects + Fixes
 
 ```bash
-npx doctype fix --auto-commit
+doctype fix --auto-commit
 ```
 
 ### After
@@ -355,7 +355,7 @@ Doctype uses OpenAI GPT-4 by default:
 
 2. **Use `--no-ai` for testing CI/CD pipelines**:
    ```bash
-   npx doctype fix --no-ai --dry-run  # Test pipeline without consuming tokens
+   doctype fix --no-ai --dry-run  # Test pipeline without consuming tokens
    ```
 
    **Note:** `--no-ai` does not update documentation content, only for testing.
@@ -383,14 +383,14 @@ Doctype uses OpenAI GPT-4 by default:
 The `--no-ai` flag is designed for **testing CI/CD pipelines** without consuming tokens:
 
 ```bash
-npx doctype fix --no-ai --dry-run
+doctype fix --no-ai --dry-run
 ```
 
 **Important:** `--no-ai` does not actually update documentation content - it only tests the pipeline. For real documentation updates, you need AI (OpenAI) or manual editing.
 
 ### Can I use this without OpenAI?
 
-For **drift detection**: Yes. `npx doctype check` works without AI.
+For **drift detection**: Yes. `doctype check` works without AI.
 
 For **automatic fixing**: No. You need an AI provider (OpenAI or Gemini in the future).
 
