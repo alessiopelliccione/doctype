@@ -94,6 +94,156 @@
       "originalMarkdownContent": "# `ContentInjector` Class\n\nThe `ContentInjector` class provides methods for injecting content into files or strings at specific anchor points. It also provides methods for previewing the results of these injections, validating anchors, and retrieving the location of anchors within files or strings.\n\n## Methods\n\n### `injectIntoFile(filePath: string, anchorId: string, newContent: string, writeToFile: boolean): InjectionResult`\n\nInjects `newContent` at the location of `anchorId` within the file specified by `filePath`. If `writeToFile` is `true`, the changes are written directly to the file.\n\n- `filePath: string` - The path to the file where the content will be injected.\n- `anchorId: string` - The identifier of the anchor where the content will be injected.\n- `newContent: string` - The content to be injected.\n- `writeToFile: boolean` - If `true`, the file will be updated with the new content.\n\nReturns an `InjectionResult` object representing the result of the injection.\n\n### `injectIntoContent(content: string, anchorId: string, newContent: string): InjectionResult`\n\nInjects `newContent` at the location of `anchorId` within the provided `content` string.\n\n- `content: string` - The string where the content will be injected.\n- `anchorId: string` - The identifier of the anchor where the content will be injected.\n- `newContent: string` - The content to be injected.\n\nReturns an `InjectionResult` object representing the result of the injection.\n\n### `injectMultiple(filePath: string, injections: Map<string, string>, writeToFile: boolean): InjectionResult[]`\n\nInjects multiple content strings at their corresponding anchor locations within the file specified by `filePath`. If `writeToFile` is `true`, the changes are written directly to the file.\n\n- `filePath: string` - The path to the file where the content will be injected.\n- `injections: Map<string, string>` - A map where the keys are anchor identifiers and the values are the corresponding content strings to be injected.\n- `writeToFile: boolean` - If `true`, the file will be updated with the new content.\n\nReturns an array of `InjectionResult` objects representing the results of the injections.\n\n### `preview(filePath: string, anchorId: string, newContent: string): InjectionResult`\n\nPreviews the result of injecting `newContent` at the location of `anchorId` within the file specified by `filePath` without actually modifying the file.\n\n- `filePath: string` - The path to the file where the content will be injected.\n- `anchorId: string` - The identifier of the anchor where the content will be injected.\n- `newContent: string` - The content to be injected.\n\nReturns an `InjectionResult` object representing the result of the injection.\n\n### `getAnchorLocation(filePath: string, anchorId: string): {startLine: number, endLine: number}`\n\nRetrieves the location of `anchorId` within the file specified by `filePath`.\n\n- `filePath: string` - The path to the file where the anchor is located.\n- `anchorId: string` - The identifier of the anchor.\n\nReturns an object with `startLine` and `endLine` properties representing the start and end lines of the anchor within the file.\n\n### `getAnchorLocationFromContent(content: string, anchorId: string): {startLine: number, endLine: number}`\n\nRetrieves the location of `anchorId` within the provided `content` string.\n\n- `content: string` - The string where the anchor is located.\n- `anchorId: string` - The identifier of the anchor.\n\nReturns an object with `startLine` and `endLine` properties representing the start and end lines of the anchor within the string.\n\n### `validateAnchor(content: string, anchorId: string): string[]`\n\nValidates the existence of `anchorId` within the provided `content` string.\n\n- `content: string` - The string where the anchor is located.\n- `anchorId: string` - The identifier of the anchor.\n\nReturns an array of error messages if the anchor is not valid, or an empty array if the anchor is valid.\n\n## Usage Example\n\n```typescript\nconst injector = new ContentInjector();\nconst filePath = './test.txt';\nconst anchorId = 'anchor1';\nconst newContent = 'New content to be injected';\n\n// Inject new content into file\nconst result = injector.injectIntoFile(filePath, anchorId, newContent, true);\n\nconsole.log(result); // Logs the InjectionResult object\n```\n\n## File Location\n`src/content/content-injector.ts`",
       "lastUpdated": 1764271728402,
       "codeSignatureText": "class ContentInjector{;injectIntoFile(filePath: string, anchorId: string, newContent: string, writeToFile: boolean): InjectionResult;injectIntoContent(content: string, anchorId: string, newContent: string): InjectionResult;injectMultiple(filePath: string, injections: Map<string, string>, writeToFile: boolean): InjectionResult[];preview(filePath: string, anchorId: string, newContent: string): InjectionResult;getAnchorLocation(filePath: string, anchorId: string): {startLine: number;endLine: number;};getAnchorLocationFromContent(content: string, anchorId: string): {startLine: number;endLine: number;};validateAnchor(content: string, anchorId: string): string[]}"
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "codeRef": {
+        "filePath": "src/core/ast-analyzer.ts",
+        "symbolName": "ASTAnalyzer"
+      },
+      "codeSignatureHash": "35265b2a642dd3dcf5725ec0d97984f40694e94abc9db17030aa1499c9b7965c",
+      "docRef": {
+        "filePath": "src/core/README.md",
+        "startLine": 18,
+        "endLine": 45
+      },
+      "originalMarkdownContent": "Analyzes TypeScript files using the TypeScript Compiler API (via `ts-morph`) to extract public API signatures.\n\n**Capabilities:**\n- Extract function declarations and signatures\n- Extract class declarations with public methods and properties\n- Extract interface declarations\n- Extract type alias declarations\n- Extract enum declarations\n- Parse JSDoc comments for additional context\n\n**API:**\n\n```typescript\nimport { ASTAnalyzer } from 'doctype';\n\nconst analyzer = new ASTAnalyzer();\n\n// Analyze single file\nconst signatures = analyzer.analyzeFile('src/auth/login.ts');\n\n// Analyze directory\nconst allSignatures = analyzer.analyzeDirectory('src/auth');\n\n// Find specific symbol\nconst signature = analyzer.findSymbol('src/auth/login.ts', 'login');\n```",
+      "lastUpdated": 1764418502190
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440002",
+      "codeRef": {
+        "filePath": "src/core/signature-hasher.ts",
+        "symbolName": "SignatureHasher"
+      },
+      "codeSignatureHash": "487ac575f7222e943ddecf4108a46fb84b919713e2df639ed4de31d7ca345333",
+      "docRef": {
+        "filePath": "src/core/README.md",
+        "startLine": 68,
+        "endLine": 92
+      },
+      "originalMarkdownContent": "Generates SHA256 cryptographic hashes of code signatures for deterministic drift detection.\n\n**Capabilities:**\n- Hash function signatures (name, parameters, return type)\n- Hash class signatures (name, properties, methods)\n- Hash interface signatures\n- Normalize signatures before hashing (consistent formatting)\n- Support for selective hashing (e.g., ignore JSDoc changes)\n\n**API:**\n\n```typescript\nimport { SignatureHasher } from 'doctype';\n\nconst hasher = new SignatureHasher();\n\n// Hash a signature\nconst result = hasher.hash(signature);\n\nconsole.log(result.hash);           // 'abc123...'\nconsole.log(result.algorithm);      // 'sha256'\nconsole.log(result.normalizedText); // 'function login(email:string,password:string):Promise<string>'\n```",
+      "lastUpdated": 1764418502218
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440003",
+      "codeRef": {
+        "filePath": "src/content/markdown-parser.ts",
+        "symbolName": "MarkdownParser"
+      },
+      "codeSignatureHash": "07c4d13d14877ce4181802a061028eeda37fca5d7d437a7b7b043b3fe57c8caa",
+      "docRef": {
+        "filePath": "src/content/README.md",
+        "startLine": 17,
+        "endLine": 48
+      },
+      "originalMarkdownContent": "Parses Markdown files to extract doctype anchors defined using HTML comments.\n\n**Anchor Format:**\n\n```markdown\n<!-- doctype:start id=\"uuid\" code_ref=\"src/file.ts#symbolName\" -->\nDocumentation content managed by Doctype.\nThis will be automatically updated when code changes.\n<!-- doctype:end id=\"uuid\" -->\n```\n\n**API:**\n\n```typescript\nimport { MarkdownParser } from 'doctype';\n\nconst parser = new MarkdownParser();\n\n// Parse file and extract all anchors\nconst anchors = parser.parseFile('docs/api.md');\n\n// Parse content string\nconst anchors = parser.parseContent(markdownContent);\n\n// Validate anchor format\nconst errors = parser.validate(markdownContent);\n\n// Parse code_ref into components\nconst { filePath, symbolName } = parser.parseCodeRef('src/utils.ts#helper');\n```",
+      "lastUpdated": 1764418502244
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440004",
+      "codeRef": {
+        "filePath": "src/content/map-manager.ts",
+        "symbolName": "DoctypeMapManager"
+      },
+      "codeSignatureHash": "28479cf1179053820dde1f1e4dac403999246896d63f69704ae26ff3f563df5f",
+      "docRef": {
+        "filePath": "src/content/README.md",
+        "startLine": 73,
+        "endLine": 75
+      },
+      "originalMarkdownContent": "Manages the `doctype-map.json` file - the single source of truth for documentation mappings.",
+      "lastUpdated": 1764418502270
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440005",
+      "codeRef": {
+        "filePath": "src/content/content-injector.ts",
+        "symbolName": "ContentInjector"
+      },
+      "codeSignatureHash": "5c4efaa53d3025e8b66202e9c53929773bdd6f538f5fe35b4671a2a042a6f882",
+      "docRef": {
+        "filePath": "src/content/README.md",
+        "startLine": 151,
+        "endLine": 186
+      },
+      "originalMarkdownContent": "Injects AI-generated or placeholder content into Markdown files within anchor boundaries.\n\n**API:**\n\n```typescript\nimport { ContentInjector } from 'doctype';\n\nconst injector = new ContentInjector();\n\n// Inject content and write to file\nconst result = injector.injectIntoFile(\n  'docs/api.md',\n  'anchor-uuid',\n  'New documentation content here.\\n\\nSupports **Markdown** formatting!',\n  true // write to file\n);\n\nconsole.log(result.success);      // true\nconsole.log(result.linesChanged); // 5\n\n// Preview without writing (dry-run)\nconst preview = injector.preview(\n  'docs/api.md',\n  'anchor-uuid',\n  'New content'\n);\n\nconsole.log(preview.before);      // Original content\nconsole.log(preview.after);       // Preview of new content\nconsole.log(preview.linesChanged); // Number of lines that will change\n\n// Validate anchor exists and is well-formed\nconst errors = injector.validateAnchor(content, 'anchor-uuid');\n```",
+      "lastUpdated": 1764418502292
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440006",
+      "codeRef": {
+        "filePath": "src/cli/logger.ts",
+        "symbolName": "Logger"
+      },
+      "codeSignatureHash": "f9a537956e6cf253710d17f166dfa94942fcc2c097903448e695a082f6e52c32",
+      "docRef": {
+        "filePath": "src/cli/README.md",
+        "startLine": 232,
+        "endLine": 263
+      },
+      "originalMarkdownContent": "Professional CLI output with colored formatting and log levels.\n\n**Features:**\n- Multiple log levels (error, warn, info, success, debug)\n- ANSI color codes for terminal output\n- Conditional verbose logging\n- Formatted helpers (path, symbol, hash)\n- Section headers and dividers\n\n**API:**\n\n```typescript\nimport { Logger } from 'doctype/cli';\n\nconst logger = new Logger(verbose);\n\nlogger.error('Error message');       // ✗ Red\nlogger.warn('Warning message');       // ⚠ Yellow\nlogger.info('Info message');          // ℹ Blue\nlogger.success('Success message');    // ✓ Green\nlogger.debug('Debug message');        // [DEBUG] Gray (verbose only)\n\nlogger.header('Section Title');       // Bold cyan\nlogger.divider();                     // ──────────\n\n// Formatted helpers\nlogger.formatPath('src/auth/login.ts');    // Cyan\nlogger.formatSymbol('login');               // Yellow\nlogger.formatHash('abc123...');             // Gray\n```",
+      "lastUpdated": 1764418502314
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440007",
+      "codeRef": {
+        "filePath": "src/cli/git-helper.ts",
+        "symbolName": "GitHelper"
+      },
+      "codeSignatureHash": "636e50dad75674e34ce865fa021c77d14c95e4cc5492508a9ec7615a3e933d0b",
+      "docRef": {
+        "filePath": "src/cli/README.md",
+        "startLine": 267,
+        "endLine": 297
+      },
+      "originalMarkdownContent": "Git operations for auto-commit functionality.\n\n**Features:**\n- Repository validation (check if current directory is a git repo)\n- File staging (`git add`)\n- Commit creation with standardized messages\n- Optional push to remote\n\n**API:**\n\n```typescript\nimport { GitHelper } from 'doctype/cli';\n\nconst git = new GitHelper(logger);\n\n// Check if current directory is a git repository\nconst isRepo = git.isGitRepository();\n\n// Auto-commit documentation changes\nconst result = git.autoCommit(\n  ['docs/api.md', 'docs/auth.md', 'doctype-map.json'], // Files to commit\n  ['login', 'logout'],                                 // Symbol names\n  false                                                 // Don't push to remote\n);\n\nif (result.success) {\n  console.log(`Created commit: ${result.commitMessage}`);\n}\n```",
+      "lastUpdated": 1764418502334
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440008",
+      "codeRef": {
+        "filePath": "src/ai/ai-agent.ts",
+        "symbolName": "AIAgent"
+      },
+      "codeSignatureHash": "05a65f7565cde2b47e8f6adaf00e26e9e490052b050333c46574e3b7dcb2ae99",
+      "docRef": {
+        "filePath": "src/ai/README.md",
+        "startLine": 47,
+        "endLine": 93
+      },
+      "originalMarkdownContent": "Main orchestrator for AI-powered documentation generation.\n\n**Features:**\n- Provider abstraction (supports multiple AI vendors)\n- Retry logic with exponential backoff\n- Connection validation\n- Error handling and fallback to placeholder\n- Token usage tracking\n\n**API:**\n\n```typescript\nimport { createAgentFromEnv, createOpenAIAgent } from 'doctype';\n\n// Create from environment variables\nconst agent = createAgentFromEnv({\n  modelId: 'gpt-4',\n  maxTokens: 1000,\n  temperature: 0.3\n});\n\n// Or create with explicit configuration\nconst agent = createOpenAIAgent('your-api-key', 'gpt-4', {\n  maxTokens: 1000,\n  temperature: 0.3,\n  timeout: 30000\n});\n\n// Generate documentation for drift\nconst newDocs = await agent.generateFromDrift(\n  'login',              // Symbol name\n  oldSignature,         // Old CodeSignature object\n  newSignature,         // New CodeSignature object\n  oldDocumentation,     // Previous markdown content\n  'src/auth/login.ts'   // File path (for context)\n);\n\nconsole.log(newDocs); // Generated markdown documentation\n\n// Validate connection (useful for CI checks)\nconst isValid = await agent.validateConnection();\nif (!isValid) {\n  console.error('Cannot connect to AI provider');\n}\n```",
+      "lastUpdated": 1764418502361
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440009",
+      "codeRef": {
+        "filePath": "src/ai/prompt-builder.ts",
+        "symbolName": "PromptBuilder"
+      },
+      "codeSignatureHash": "b47ebc554f225f79b30e826c5d6637fc6af4191b841e7a951ad5f669389c5e12",
+      "docRef": {
+        "filePath": "src/ai/README.md",
+        "startLine": 108,
+        "endLine": 110
+      },
+      "originalMarkdownContent": "Generates optimized prompts for AI providers to produce high-quality documentation.",
+      "lastUpdated": 1764418502361
+    },
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440010",
+      "codeRef": {
+        "filePath": "src/ai/providers/openai-provider.ts",
+        "symbolName": "OpenAIProvider"
+      },
+      "codeSignatureHash": "4029be42c282a29ad34eb062f03a84e5a72e088fe0d47b969c1e3a959bcb7ac0",
+      "docRef": {
+        "filePath": "src/ai/README.md",
+        "startLine": 210,
+        "endLine": 219
+      },
+      "originalMarkdownContent": "OpenAI API integration for documentation generation using GPT models.\n\n**Features:**\n- Chat Completions API (GPT-4, GPT-4-turbo, GPT-3.5-turbo)\n- Configurable model, max tokens, temperature\n- Usage statistics tracking (prompt tokens, completion tokens, total tokens)\n- Error handling with detailed messages\n- Timeout support",
+      "lastUpdated": 1764418502362
     }
   ]
 }

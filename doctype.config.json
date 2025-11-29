@@ -1,6 +1,6 @@
 {
   "projectName": "doctype",
   "projectRoot": ".",
-  "docsFolder": "./docs",
+  "docsFolder": ".",
   "mapFile": "doctype-map.json"
 }
