@@ -251,6 +251,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: refs/tags/${{ needs.version-bump.outputs.NEW_TAG }}
+          token: ${{ secrets.RELEASE_TOKEN }}
 
       - uses: actions/setup-node@v4
         with:
@@ -335,9 +336,7 @@ jobs:
           fi
           
           # Publish main package
-          npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm publish --provenance
 
   publish-cli:
     needs: [version-bump, publish-core]
@@ -375,8 +374,6 @@ jobs:
 
       - name: Publish @doctypedev/doctype
         run: npm publish --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
