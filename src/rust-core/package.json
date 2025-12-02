@@ -1,6 +1,6 @@
 {
   "name": "@doctypedev/core",
-  "version": "0.2.8",
+  "version": "0.2.21",
   "main": "index.js",
   "types": "index.d.ts",
   "napi": {
@@ -9,7 +9,7 @@
       "defaults": true,
       "additional": [
         "aarch64-apple-darwin",
-        "aarch64-unknown-linux-gnu"
+        "x86_64-unknown-linux-musl"
       ]
     }
   },
@@ -27,5 +27,12 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "optionalDependencies": {
+    "@doctypedev/core-win32-x64-msvc": "0.2.21",
+    "@doctypedev/core-darwin-x64": "0.2.21",
+    "@doctypedev/core-linux-x64-gnu": "0.2.21",
+    "@doctypedev/core-darwin-arm64": "0.2.21",
+    "@doctypedev/core-linux-x64-musl": "0.2.21"
   }
 }
