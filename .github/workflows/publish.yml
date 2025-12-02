@@ -186,6 +186,10 @@ jobs:
         with:
           path: src/rust-core/artifacts
 
+      - name: Install dependencies
+        working-directory: src/rust-core
+        run: npm install
+
       - name: Move artifacts
         working-directory: src/rust-core
         run: npm run artifacts
