@@ -19,19 +19,19 @@ module.exports = async () => {
       const dirPath = path.join(npmDir, dirName);
       if (fs.statSync(dirPath).isDirectory()) {
         console.log(`Processing subpackage: ${dirName}`);
-        
+
         if (!fs.existsSync(path.join(dirPath, 'package.json'))) {
-          console.error(`Error: No package.json found in ${dirName}`);
-          process.exit(1);
+          console.warn(`No package.json found in ${dirName}, skipping...`);
+          continue;
         }
-        
+
         try {
             console.log(`Publishing @doctypedev/core-${dirName}...`);
             run('npm publish --provenance', dirPath);
         } catch (e) {
             console.error(`Failed to publish ${dirName}:`, e.message);
             // Optional: deciding whether to fail hard or continue
-            process.exit(1); 
+            process.exit(1);
         }
       }
     }
