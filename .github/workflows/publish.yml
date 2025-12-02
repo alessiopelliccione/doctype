@@ -68,24 +68,28 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Bump version in root package.json
-          npm version ${{ steps.bump.outputs.type }} -m "chore(release): %s"
+          # 1. Bump version in root package.json (no git tag/commit yet)
+          npm version ${{ steps.bump.outputs.type }} --no-git-tag-version
           
           # Get new version
-          NEW_TAG=$(git describe --abbrev=0)
-          NEW_VERSION=${NEW_TAG#v}
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          NEW_TAG="v$NEW_VERSION"
           echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
           
-          # Bump version in rust-core package.json to match
+          # 2. Bump version in rust-core package.json
           cd src/rust-core
           npm version $NEW_VERSION --no-git-tag-version
           cd ../..
           
-          # Commit the rust-core change as well (amend the npm version commit or new one)
-          git add src/rust-core/package.json
-          git commit --amend --no-edit
+          # 3. Update optional dependency in root package.json
+          npm pkg set optionalDependencies.@doctypedev/core=$NEW_VERSION
           
-          git push --follow-tags
+          # 4. Commit and Tag
+          git add package.json src/rust-core/package.json
+          git commit -m "chore(release): $NEW_TAG"
+          git tag $NEW_TAG
+          
+          git push origin HEAD
           git push origin $NEW_TAG
 
   build-core:
@@ -192,7 +196,21 @@ jobs:
 
       - name: Publish @doctypedev/core
         working-directory: src/rust-core
-        run: npm publish --access public --provenance
+        run: |
+          # Publish subpackages first if they exist
+          if [ -d "npm" ]; then
+            for dir in npm/*; do
+              if [ -d "$dir" ]; then
+                echo "Publishing $dir..."
+                cd "$dir"
+                npm publish --access public --provenance
+                cd ../..
+              fi
+            done
+          fi
+          
+          # Publish main package
+          npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -215,7 +233,7 @@ jobs:
       # Install dependencies but ignore the optional @doctypedev/core dependency
       # because we are going to use the local build logic for tests anyway
       - name: Install dependencies
-        run: npm ci --omit=optional
+        run: npm install --omit=optional
 
       # We still need to build the core locally for tests to pass in this environment
       - name: Install Rust for Tests
