@@ -39,16 +39,16 @@ jobs:
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Build Rust core (for types)
+      - name: Build Rust core (in crates/core for types)
         run: |
           cd crates/core
           pnpm install
           pnpm run build
 
-      - name: Prepare Core Native Types
+      - name: Prepare Core Native Types (for packages/core build)
         run: cp crates/core/index.d.ts packages/core/native-types.d.ts
 
-      - name: Build CLI only (skip tests)
+      - name: Build all packages
         run: pnpm run build
 
       - name: Make CLI executable

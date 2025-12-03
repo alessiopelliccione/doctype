@@ -1,0 +1,74 @@
+{
+  "name": "@doctypedev/doctype",
+  "version": "0.3.27",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doctypedev/doctype.git"
+  },
+  "description": "The Self-Maintaining Documentation System - Automatically update documentation when code changes",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "doctype": "dist/index.js"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "postbuild": "chmod +x dist/index.js",
+    "dev": "tsc --watch -p tsconfig.json",
+    "test": "vitest run --dir __tests__",
+    "test:watch": "vitest --dir __tests__",
+    "test:coverage": "vitest run --coverage --dir __tests__",
+    "test:ui": "vitest --ui --dir __tests__",
+    "lint": "eslint . --ext .ts",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "documentation",
+    "ast",
+    "typescript",
+    "automation",
+    "drift-detection"
+  ],
+  "author": "doctypedev",
+  "license": "MIT",
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "@doctypedev/core": "workspace:*",
+    "@types/uuid": "^10.0.0",
+    "dotenv": "^17.2.3",
+    "ts-morph": "^21.0.1",
+    "uuid": "^13.0.0",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@doctypedev/core-native": "workspace:*",
+    "@types/node": "^20.10.6",
+    "@types/vue": "^1.0.31",
+    "@types/yargs": "^17.0.32",
+    "@typescript-eslint/eslint-plugin": "^6.16.0",
+    "@typescript-eslint/parser": "^6.16.0",
+    "@vitest/coverage-v8": "^1.1.0",
+    "@vitest/ui": "^1.1.0",
+    "eslint": "^8.56.0",
+    "glob": "^13.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10",
+    "vitepress": "^1.6.4",
+    "vitest": "^1.1.0",
+    "vue": "^3.5.25"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "packageManager": "pnpm@10.23.0+sha512.21c4e5698002ade97e4efe8b8b4a89a8de3c85a37919f957e7a0f30f38fbc5bbdd05980ffe29179b2fb6e6e691242e0fef5fb6411e2a4b"
+}
