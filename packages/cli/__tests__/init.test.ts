@@ -6,28 +6,76 @@ const { isNativeModuleSupported } = vi.hoisted(() => {
   return { isNativeModuleSupported: platform === 'darwin-arm64' };
 });
 
-// Mock @doctypedev/core for platforms without native module support
-vi.mock('@doctypedev/core', async () => {
+// Mock native-loader first - this is the root module that loads the native binary
+vi.mock('../../core/native-loader', async (importOriginal) => {
   if (isNativeModuleSupported) {
-    // On supported platforms, use the real module
-    const actual = await vi.importActual<typeof import('@doctypedev/core')>('@doctypedev/core');
-    return actual;
-  } else {
-    // On unsupported platforms, return a mock
-    return {
-      SymbolType: {
-        Function: 'Function',
-        Class: 'Class',
-        Interface: 'Interface',
-        TypeAlias: 'TypeAlias',
-        Enum: 'Enum',
-        Variable: 'Variable',
-        Const: 'Const',
-      },
-      ASTAnalyzer: vi.fn(),
-      SignatureHasher: vi.fn(),
-    };
+    return importOriginal();
   }
+  // Mock the native-loader to prevent it from loading the platform-specific binary
+  return {
+    SymbolType: {
+      Function: 'Function',
+      Class: 'Class',
+      Interface: 'Interface',
+      TypeAlias: 'TypeAlias',
+      Enum: 'Enum',
+      Variable: 'Variable',
+      Const: 'Const',
+    },
+    discoverFiles: vi.fn(() => ({
+      markdownFiles: [],
+      sourceFiles: [],
+      totalFiles: 0,
+      errors: 0,
+    })),
+    helloWorld: vi.fn(() => 'mock hello'),
+    getVersion: vi.fn(() => '0.0.0-mock'),
+    AstAnalyzer: class MockAstAnalyzer {
+      analyzeFile() { return 'mock'; }
+      getSymbols() { return []; }
+    },
+  };
+});
+
+// Mock core modules - always mock on unsupported platforms
+vi.mock('../../core/ast-analyzer', async (importOriginal) => {
+  if (isNativeModuleSupported) {
+    return importOriginal();
+  }
+  return {
+    ASTAnalyzer: class MockASTAnalyzer {
+      analyzeFile() { return []; }
+      analyzeCode() { return []; }
+    },
+  };
+});
+
+vi.mock('../../core/signature-hasher', async (importOriginal) => {
+  if (isNativeModuleSupported) {
+    return importOriginal();
+  }
+  return {
+    SignatureHasher: class MockSignatureHasher {
+      hash() { return { hash: 'mock-hash' }; }
+    },
+  };
+});
+
+vi.mock('@doctypedev/core', async (importOriginal) => {
+  if (isNativeModuleSupported) {
+    return importOriginal();
+  }
+  return {
+    SymbolType: {
+      Function: 'Function',
+      Class: 'Class',
+      Interface: 'Interface',
+      TypeAlias: 'TypeAlias',
+      Enum: 'Enum',
+      Variable: 'Variable',
+      Const: 'Const',
+    },
+  };
 });
 
 import { initCommand } from '../init';
