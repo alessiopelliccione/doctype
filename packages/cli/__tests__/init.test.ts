@@ -4,6 +4,27 @@ import { determineOutputFile } from '../init-orchestrator';
 import { readFileSync, unlinkSync, existsSync, mkdirSync, rmdirSync, writeFileSync } from 'fs';
 import { join, resolve } from 'path';
 import { DoctypeConfig } from '../types';
+
+// Mock @doctypedev/core for platforms without native module support
+const platform = `${process.platform}-${process.arch}`;
+const isNativeModuleSupported = platform === 'darwin-arm64';
+
+if (!isNativeModuleSupported) {
+  vi.mock('@doctypedev/core', () => ({
+    SymbolType: {
+      Function: 'Function',
+      Class: 'Class',
+      Interface: 'Interface',
+      TypeAlias: 'TypeAlias',
+      Enum: 'Enum',
+      Variable: 'Variable',
+      Const: 'Const',
+    },
+    ASTAnalyzer: vi.fn(),
+    SignatureHasher: vi.fn(),
+  }));
+}
+
 import { SymbolType } from '@doctypedev/core';
 
 // Mock @clack/prompts - use vi.hoisted to ensure variables are available during hoisting
