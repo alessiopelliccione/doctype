@@ -62,6 +62,9 @@ lerna-debug.log*
 # Dependencies
 node_modules/
 
+# Rust crates (development only, not needed in published package)
+crates/
+
 # Build artifacts
 *.tsbuildinfo
 .cache/
