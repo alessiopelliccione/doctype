@@ -7,6 +7,7 @@ export default defineConfig({
     environment: 'node',
     include: ['__tests__/**/*.{test,spec}.ts'],
     exclude: ['node_modules', 'dist'],
+    pool: 'forks', // Use forks instead of threads to support process.chdir()
   },
   resolve: {
     alias: {
