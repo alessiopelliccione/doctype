@@ -7,13 +7,46 @@ settings:
 importers:
 
   .:
+    devDependencies:
+      '@changesets/cli':
+        specifier: ^2.29.8
+        version: 2.29.8(@types/node@20.19.25)
+      '@types/vue':
+        specifier: ^1.0.31
+        version: 1.0.31
+      glob:
+        specifier: ^13.0.0
+        version: 13.0.0
+      tsx:
+        specifier: ^4.19.2
+        version: 4.21.0
+      vite:
+        specifier: ^5.0.10
+        version: 5.4.21(@types/node@20.19.25)
+      vitepress:
+        specifier: ^1.6.4
+        version: 1.6.4(@algolia/client-search@5.45.0)(@types/node@20.19.25)(postcss@8.5.6)(search-insights@2.17.3)(typescript@5.9.3)
+      vue:
+        specifier: ^3.5.25
+        version: 3.5.25(typescript@5.9.3)
+
+  crates/core:
+    devDependencies:
+      '@napi-rs/cli':
+        specifier: ^2.18.0
+        version: 2.18.4
+      prettier:
+        specifier: ^3.0.0
+        version: 3.7.4
+
+  packages/cli:
     dependencies:
       '@clack/prompts':
         specifier: ^0.11.0
         version: 0.11.0
       '@doctypedev/core':
         specifier: workspace:*
-        version: link:packages/core
+        version: link:../core
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
@@ -30,12 +63,9 @@ importers:
         specifier: ^17.7.2
         version: 17.7.2
     devDependencies:
-      '@changesets/cli':
-        specifier: ^2.29.8
-        version: 2.29.8(@types/node@20.19.25)
       '@doctypedev/core-native':
         specifier: workspace:*
-        version: link:crates/core
+        version: link:../../crates/core
       '@types/node':
         specifier: ^20.10.6
         version: 20.19.25
@@ -81,15 +111,6 @@ importers:
       vue:
         specifier: ^3.5.25
         version: 3.5.25(typescript@5.9.3)
-
-  crates/core:
-    devDependencies:
-      '@napi-rs/cli':
-        specifier: ^2.18.0
-        version: 2.18.4
-      prettier:
-        specifier: ^3.0.0
-        version: 3.7.4
 
   packages/core:
     dependencies:
