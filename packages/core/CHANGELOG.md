@@ -1,5 +1,11 @@
 # @doctypedev/core
 
+## 0.4.1
+
+### Patch Changes
+
+- 61fa11b: Update optionalDependencies to force download 0.4.x native core
+
 ## 0.4.0
 
 ### Minor Changes
