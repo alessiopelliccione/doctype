@@ -1,5 +1,11 @@
 # @doctypedev/core
 
+## 0.3.32
+
+### Patch Changes
+
+- 9adca9f: Improve pipeline by avoiding release of native packages when not really needed
+
 ## 0.3.31
 
 ### Patch Changes
