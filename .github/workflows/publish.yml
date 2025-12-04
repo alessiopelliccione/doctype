@@ -82,8 +82,8 @@ jobs:
 
   release-native:
     name: Release Native (${{ matrix.settings.platform }}-${{ matrix.settings.arch }})
-    needs: [release, check-native-changes]
-    if: needs.release.outputs.published == 'true' && needs.check-native-changes.outputs.native_changed == 'true'
+    needs: release
+    if: needs.release.outputs.published == 'true'
     runs-on: ${{ matrix.settings.host }}
     strategy:
       fail-fast: false
