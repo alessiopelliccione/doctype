@@ -237,9 +237,18 @@ export class MarkdownAnchorInserter {
    * @returns Array of code references
    */
   public getExistingCodeRefs(content: string): string[] {
-    const pattern = /<!--\s*doctype:start\s+id="[^"]+"\s+code_ref="([^"]+)"\s*-->/g;
+    return this.getExistingAnchors(content).map(a => a.codeRef);
+  }
+
+  /**
+   * Get all existing anchors (ID and code ref) from markdown content
+   * @param content Markdown content
+   * @returns Array of anchor objects
+   */
+  public getExistingAnchors(content: string): Array<{ id: string; codeRef: string }> {
+    const pattern = /<!--\s*doctype:start\s+id="([^"]+)"\s+code_ref="([^"]+)"\s*-->/g;
     const matches = content.matchAll(pattern);
-    return Array.from(matches, (m) => m[1]);
+    return Array.from(matches, (m) => ({ id: m[1], codeRef: m[2] }));
   }
 
   /**
