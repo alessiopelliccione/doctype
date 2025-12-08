@@ -80,7 +80,7 @@ export class ChangesetGenerator {
     options: GenerateOptions = {}
   ): Promise<ChangesetResult> {
     const {
-      packageNames = ['@doctypedev/doctype'],
+      packageNames = ['package'],
       outputDir = '.changeset',
       noAI = false,
       versionType: manualVersionType,

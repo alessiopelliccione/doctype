@@ -8,6 +8,7 @@ import { ChangesetAnalyzer } from './changeset-analyzer';
 import { ChangesetGenerator } from './changeset-generator';
 import { MonorepoDetector } from './monorepo-detector';
 import { PackageSelector } from './package-selector';
+import * as path from 'path';
 
 /**
  * Generate a changeset from code changes
@@ -85,24 +86,31 @@ export async function changesetCommand(
 
     // Filter analysis to include only changes relevant to selected packages
     // This ensures AI only focuses on what matters for these packages
-    const relevantPaths = resolvedPackageNames.map(name => {
+    const relevantPackagePaths = resolvedPackageNames.map(name => {
       const pkg = monorepoInfo.packages.find(p => p.name === name);
-      return pkg ? pkg.relativePath : null;
+      return pkg ? pkg.path : null; // Use pkg.path (absolute) instead of pkg.relativePath
     }).filter(p => p !== null) as string[];
 
     // If we have package paths (monorepo), filter changes
-    // If not (relevantPaths empty or single package repo), keep all changes
-    if (relevantPaths.length > 0 && monorepoInfo.isMonorepo) {
+    // If not (relevantPackagePaths empty or single package repo), keep all changes
+    if (relevantPackagePaths.length > 0 && monorepoInfo.isMonorepo) {
       // Filter symbol changes
       analysis.symbolChanges = analysis.symbolChanges.filter(change => {
-        // change.filePath is absolute, but monorepoInfo paths are relative
-        // We need to check if filePath contains the package path
-        return relevantPaths.some(pkgPath => change.filePath.includes(pkgPath));
+        // change.filePath is absolute
+        // We ensure strict directory matching
+        return relevantPackagePaths.some(pkgPath =>
+          change.filePath.startsWith(pkgPath + path.sep) || change.filePath === pkgPath
+        );
       });
 
       // Filter changed files
+      // files are also absolute in our analyzer (or relative? let's check analyzer)
+      // ASTAnalyzer returns absolute paths usually.
+      // ChangesetAnalyzer.extractChangedFiles returns `${projectRoot}/${filePath}` => Absolute.
       analysis.changedFiles = analysis.changedFiles.filter(file => {
-        return relevantPaths.some(pkgPath => file.includes(pkgPath));
+        return relevantPackagePaths.some(pkgPath =>
+          file.startsWith(pkgPath + path.sep) || file === pkgPath
+        );
       });
 
       // Update total count
