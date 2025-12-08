@@ -5207,12 +5207,12 @@
         "filePath": "packages/cli/src/services/drift-detector.ts",
         "symbolName": "signatures"
       },
-      "codeSignatureHash": "dd82e18d6185f4efc0761fc7b22d13777c9576244d0879e812f1d2838dc8dbb0",
-      "codeSignatureText": "signatures = analyzer.analyzeFile(codeFilePath)",
+      "codeSignatureHash": "0d7f200313cdb7a845564c001cd9d6f885549086b75ac94b3424e0bc9d609bcb",
+      "codeSignatureText": "signatures = analyzer.analyzeFile(filePath)",
       "docRef": {
         "filePath": "docs/packages/cli/src/services/drift-detector.md"
       },
-      "lastUpdated": 1765209229035
+      "lastUpdated": 1765237112438
     },
     {
       "id": "e09ccf26-1acb-4bbf-92af-80b80489b8c4",

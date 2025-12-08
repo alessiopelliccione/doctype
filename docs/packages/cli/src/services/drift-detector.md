@@ -197,7 +197,19 @@ TODO: Add documentation for this symbol
 ### signatures
 
 <!-- doctype:start id="e8fdee41-1e83-4b69-980f-f0c392f27d7c" code_ref="packages/cli/src/services/drift-detector.ts#signatures" -->
-TODO: Add documentation for this symbol
+**Purpose:** The 'signatures' constant holds the results of analyzing a file specified by the given file path using the analyzer's functionality. This allows for insights into the file's structure and content.
+
+**Parameters:**
+- `filePath` (`string`): The path to the file that needs to be analyzed.
+
+**Returns:** `any` - The result of the analysis which may contain details like function signatures, types, or other relevant information about the file.
+
+**Usage Example:**
+```typescript
+const filePath = './example.ts';
+const signatures = analyzer.analyzeFile(filePath);
+console.log(signatures);
+```
 <!-- doctype:end id="e8fdee41-1e83-4b69-980f-f0c392f27d7c" -->
 
 
