@@ -155,6 +155,10 @@ export async function scanAndCreateAnchors(
   const mapManager = new DoctypeMapManager(mapFilePath);
   const anchorInserter = new MarkdownAnchorInserter();
 
+  // Clear existing map to avoid ghost drift - we want to rebuild it based on
+  // actual codebase state + existing markdown anchors.
+  mapManager.clear();
+
   // Find all TypeScript files using Rust-powered discovery
   onProgress?.('Scanning TypeScript files...');
   const discoveryResult = discoverFiles(projectRoot, {
@@ -275,48 +279,75 @@ export async function scanAndCreateAnchors(
       result.filesCreated++;
     }
 
-    const existingCodeRefs = anchorInserter.getExistingCodeRefs(docContent);
-    const existingSet = new Set(existingCodeRefs);
+    // Get existing anchors to preserve IDs and avoid duplicates
+    const existingAnchors = anchorInserter.getExistingAnchors(docContent);
+    const existingAnchorMap = new Map(existingAnchors.map((a) => [a.codeRef, a.id]));
+
     const processedThisRun = new Set<string>();
     let hasChanges = false;
 
     for (const symbol of symbols) {
       const codeRef = `${symbol.filePath}#${symbol.symbolName}`;
 
-      if (existingSet.has(codeRef) || processedThisRun.has(codeRef)) {
+      if (processedThisRun.has(codeRef)) {
         continue;
       }
-
       processedThisRun.add(codeRef);
 
-      const content = 'TODO: Add documentation for this symbol';
-      const normalizedContent = content.trim();
+      let anchorId: string;
 
-      const insertResult = anchorInserter.insertIntoContent(docContent, codeRef, {
-        createSection: true,
-        placeholder: normalizedContent,
-      });
+      // Check if we already have an anchor for this symbol in the markdown
+      if (existingAnchorMap.has(codeRef)) {
+        // Reuse existing ID
+        anchorId = existingAnchorMap.get(codeRef)!;
+      } else {
+        // Create new anchor
+        const content = 'TODO: Add documentation for this symbol';
+        const normalizedContent = content.trim();
 
-      if (insertResult.success) {
-        docContent = insertResult.content;
-        hasChanges = true;
+        const insertResult = anchorInserter.insertIntoContent(docContent, codeRef, {
+          createSection: true,
+          placeholder: normalizedContent,
+        });
 
-        const mapEntry: DoctypeMapEntry = {
-          id: insertResult.anchorId,
-          codeRef: {
-            filePath: symbol.filePath,
-            symbolName: symbol.symbolName,
-          },
-          codeSignatureHash: symbol.hash,
-          codeSignatureText: symbol.signatureText,
-          docRef: {
-            filePath: path.relative(process.cwd(), docPath),
-          },
-          lastUpdated: Date.now(),
-        };
+        if (insertResult.success) {
+          docContent = insertResult.content;
+          hasChanges = true;
+          anchorId = insertResult.anchorId;
+          result.anchorsCreated++;
+        } else {
+          const errorMsg = `Failed to create anchor for ${codeRef}: ${insertResult.error}`;
+          result.errors.push(errorMsg);
+          onProgress?.(errorMsg);
+          continue;
+        }
+      }
 
+      // Add to map (which was cleared at start)
+      // We add it regardless of whether it was existing or new, ensuring
+      // the map is fully in sync with codebase + docs.
+      const mapEntry: DoctypeMapEntry = {
+        id: anchorId,
+        codeRef: {
+          filePath: symbol.filePath,
+          symbolName: symbol.symbolName,
+        },
+        codeSignatureHash: symbol.hash,
+        codeSignatureText: symbol.signatureText,
+        docRef: {
+          filePath: path.relative(process.cwd(), docPath),
+        },
+        lastUpdated: Date.now(),
+      };
+
+      try {
         mapManager.addEntry(mapEntry);
-        result.anchorsCreated++;
+      } catch (e) {
+        // Should not happen since we checked duplicates in processedThisRun
+        // and map was cleared. But purely defensive.
+        const errorMsg = `Duplicate entry for ${codeRef}: ${e instanceof Error ? e.message : String(e)}`;
+        result.errors.push(errorMsg);
+        onProgress?.(errorMsg);
       }
     }
 
