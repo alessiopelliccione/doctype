@@ -7,7 +7,7 @@
  * AI-powered documentation generation (OpenAI, Gemini)
  */
 
-import { DoctypeMapManager } from '../../../content/map-manager';
+import { SintesiMapManager } from '../../../content/map-manager';
 import { ContentInjector } from '../../../content/content-injector';
 import { AstAnalyzer } from '@sintesi/core';
 import { Logger } from '../utils/logger';
@@ -31,7 +31,7 @@ import { v4 as uuidv4 } from 'uuid';
 export async function fixCommand(options: FixOptions): Promise<FixResult> {
   const logger = new Logger(options.verbose);
 
-  logger.header('🔧 Doctype Fix - Update Documentation');
+  logger.header('🔧 Sintesi Fix - Update Documentation');
 
   // Load configuration file (required for all commands except init)
   let config;
@@ -75,7 +75,7 @@ export async function fixCommand(options: FixOptions): Promise<FixResult> {
   }
 
   // Load the map
-  const mapManager = new DoctypeMapManager(mapPath);
+  const mapManager = new SintesiMapManager(mapPath);
 
   // Resolve the root directory for source code
   const codeRoot = config

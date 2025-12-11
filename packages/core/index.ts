@@ -30,13 +30,13 @@ export type {
   CodeSignature,
   SignatureHash,
   DocRef,
-  DoctypeMapEntry,
-  DoctypeMap,
+  SintesiMapEntry,
+  SintesiMap,
   FileDiscoveryResult,
   FileDiscoveryOptions,
   SymbolTypeValue,
   // Markdown extraction types
-  DoctypeAnchor,
+  SintesiAnchor,
   ExtractionResult,
   CodeRefParts,
   // Project Context types

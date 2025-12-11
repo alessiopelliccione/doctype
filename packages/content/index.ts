@@ -13,11 +13,11 @@ export {
   extractAnchors,
   validateMarkdownAnchors,
   parseCodeRef,
-  type DoctypeAnchor,
+  type SintesiAnchor,
   type ExtractionResult,
   type CodeRefParts,
 } from '../core';
 
-export { DoctypeMapManager } from './map-manager';
+export { SintesiMapManager } from './map-manager';
 export { ContentInjector, type InjectionResult } from './content-injector';
 export { MarkdownAnchorInserter, type AnchorInsertionOptions, type AnchorInsertionResult } from './markdown-anchor-inserter';

@@ -1,5 +1,5 @@
 /**
- * Init Command - Interactive setup for Doctype configuration
+ * Init Command - Interactive setup for Sintesi configuration
  *
  * Creates a sintesi.config.json file with user-provided settings:
  * - Project name

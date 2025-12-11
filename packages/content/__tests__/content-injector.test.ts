@@ -14,10 +14,10 @@ describe('ContentInjector', () => {
 
   const createTestContent = (): string => `# Test Document
 
-<!-- doctype:start id="test-anchor" code_ref="src/test.ts#testFunc" -->
+<!-- sintesi:start id="test-anchor" code_ref="src/test.ts#testFunc" -->
 Old content here
 that spans multiple lines
-<!-- doctype:end id="test-anchor" -->
+<!-- sintesi:end id="test-anchor" -->
 
 More content below.`;
 
@@ -40,8 +40,8 @@ More content below.`;
 
       const result = injector.injectIntoContent(content, 'test-anchor', newContent);
 
-      expect(result.content).toContain('<!-- doctype:start id="test-anchor"');
-      expect(result.content).toContain('<!-- doctype:end id="test-anchor" -->');
+      expect(result.content).toContain('<!-- sintesi:start id="test-anchor"');
+      expect(result.content).toContain('<!-- sintesi:end id="test-anchor" -->');
     });
 
     it('should preserve content outside anchors', () => {
@@ -76,8 +76,8 @@ More content below.`;
       const result = injector.injectIntoContent(content, 'test-anchor', '');
 
       expect(result.success).toBe(true);
-      expect(result.content).toContain('<!-- doctype:start');
-      expect(result.content).toContain('<!-- doctype:end');
+      expect(result.content).toContain('<!-- sintesi:start');
+      expect(result.content).toContain('<!-- sintesi:end');
     });
   });
 
@@ -104,13 +104,13 @@ More content below.`;
 
   describe('injectMultiple', () => {
     it('should inject content into multiple anchors', () => {
-      const content = `<!-- doctype:start id="anchor1" code_ref="src/a.ts#a" -->
+      const content = `<!-- sintesi:start id="anchor1" code_ref="src/a.ts#a" -->
 Old A
-<!-- doctype:end id="anchor1" -->
+<!-- sintesi:end id="anchor1" -->
 
-<!-- doctype:start id="anchor2" code_ref="src/b.ts#b" -->
+<!-- sintesi:start id="anchor2" code_ref="src/b.ts#b" -->
 Old B
-<!-- doctype:end id="anchor2" -->`;
+<!-- sintesi:end id="anchor2" -->`;
 
       writeFileSync(testFilePath, content);
 
@@ -181,7 +181,7 @@ Old B
     });
 
     it('should detect missing start anchor', () => {
-      const content = `<!-- doctype:end id="orphan" -->`;
+      const content = `<!-- sintesi:end id="orphan" -->`;
       const errors = injector.validateAnchor(content, 'orphan');
 
       expect(errors.length).toBeGreaterThan(0);
@@ -189,7 +189,7 @@ Old B
     });
 
     it('should detect missing end anchor', () => {
-      const content = `<!-- doctype:start id="unclosed" code_ref="src/test.ts#test" -->`;
+      const content = `<!-- sintesi:start id="unclosed" code_ref="src/test.ts#test" -->`;
       const errors = injector.validateAnchor(content, 'unclosed');
 
       expect(errors.length).toBeGreaterThan(0);
@@ -197,10 +197,10 @@ Old B
     });
 
     it('should detect duplicate start anchors', () => {
-      const content = `<!-- doctype:start id="dup" code_ref="src/test.ts#test" -->
-<!-- doctype:start id="dup" code_ref="src/test.ts#test" -->
-<!-- doctype:end id="dup" -->
-<!-- doctype:end id="dup" -->`;
+      const content = `<!-- sintesi:start id="dup" code_ref="src/test.ts#test" -->
+<!-- sintesi:start id="dup" code_ref="src/test.ts#test" -->
+<!-- sintesi:end id="dup" -->
+<!-- sintesi:end id="dup" -->`;
 
       const errors = injector.validateAnchor(content, 'dup');
 
@@ -209,8 +209,8 @@ Old B
     });
 
     it('should detect misordered anchors', () => {
-      const content = `<!-- doctype:end id="backwards" -->
-<!-- doctype:start id="backwards" code_ref="src/test.ts#test" -->`;
+      const content = `<!-- sintesi:end id="backwards" -->
+<!-- sintesi:start id="backwards" code_ref="src/test.ts#test" -->`;
 
       const errors = injector.validateAnchor(content, 'backwards');
 

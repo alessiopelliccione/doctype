@@ -5,8 +5,8 @@
  * by comparing current code signatures with saved hashes
  */
 
-import { DoctypeMapManager } from '../../../content';
-import { CodeSignature, DoctypeMapEntry, AstAnalyzer, discoverFiles } from '@sintesi/core';
+import { SintesiMapManager } from '../../../content';
+import { CodeSignature, SintesiMapEntry, AstAnalyzer, discoverFiles } from '@sintesi/core';
 import { Logger } from '../utils/logger';
 import { existsSync, readFileSync } from 'fs';
 import { resolve, relative, sep } from 'path';
@@ -16,7 +16,7 @@ import { resolve, relative, sep } from 'path';
  */
 export interface DriftInfo {
   /** The map entry that has drifted */
-  entry: DoctypeMapEntry;
+  entry: SintesiMapEntry;
   /** The old signature (reconstructed from signature text, if available) */
   oldSignature?: CodeSignature;
   /** The current signature from the code */
@@ -31,7 +31,7 @@ export interface DriftInfo {
  * Information about a missing symbol
  */
 export interface MissingSymbolInfo {
-  entry: DoctypeMapEntry;
+  entry: SintesiMapEntry;
   reason: 'file_not_found' | 'symbol_not_found';
   codeFilePath: string;
 }
@@ -101,18 +101,18 @@ function verifyExported(content: string, symbolName: string): boolean {
 }
 
 /**
- * Detect drift across all entries in the doctype map
+ * Detect drift across all entries in the sintesi map
  *
  * This function centralizes the drift detection logic used by both
  * the check and fix commands to avoid code duplication.
  *
- * @param mapManager - The doctype map manager
+ * @param mapManager - The sintesi map manager
  * @param analyzer - AST analyzer instance
  * @param options - Detection options
  * @returns Object containing drifts and missing symbols
  */
 export function detectDrift(
-  mapManager: DoctypeMapManager,
+  mapManager: SintesiMapManager,
   analyzer: InstanceType<typeof AstAnalyzer>,
   options: DriftDetectionOptions = {}
 ): DriftResult {

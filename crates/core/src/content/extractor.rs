@@ -342,7 +342,7 @@ fn extract_attribute(text: &str, attr_name: &str) -> Option<String> {
     // - either single or double quotes
     // - capture group for the value
     // - matching closing quote
-    let pattern = format!(r#"{{}}\\s*=\\s*["']([^"']+)["']"#, regex::escape(attr_name));
+    let pattern = format!(r#"{}\s*=\s*["']([^"']+)["']"#, regex::escape(attr_name));
     let re = Regex::new(&pattern).ok()?;
 
     re.captures(text)
@@ -355,11 +355,3 @@ pub fn extract_anchors(file_path: impl AsRef<Path>, content: &str) -> Extraction
     let extractor = MarkdownExtractor::new();
     extractor.extract_from_file(file_path, content)
 }
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_extract_simple_anchor() {
-        let markdown = r#

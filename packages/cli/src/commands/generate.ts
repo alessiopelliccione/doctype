@@ -5,8 +5,8 @@
  * This is effectively a semantic alias for the 'fix' command but focused on content generation.
  */
 
-import { DoctypeMapManager } from '../../../content/map-manager';
-import { AstAnalyzer, extractAnchors, DoctypeAnchor, CodeSignature } from '@sintesi/core';
+import { SintesiMapManager } from '../../../content/map-manager';
+import { AstAnalyzer, extractAnchors, SintesiAnchor, CodeSignature } from '@sintesi/core';
 import { Logger } from '../utils/logger';
 import { GenerateResult, GenerateOptions } from '../types';
 import { detectDrift } from '../services/drift-detector';
@@ -26,7 +26,7 @@ import { executeFixes } from '../orchestrators/fix-orchestrator';
 export async function generateCommand(options: GenerateOptions): Promise<GenerateResult> {
   const logger = new Logger(options.verbose);
 
-  logger.header('✨ Doctype Generate - AI Documentation Generation');
+  logger.header('✨ Sintesi Generate - AI Documentation Generation');
 
   // Load configuration file (required for all commands except init)
   let config;
@@ -70,7 +70,7 @@ export async function generateCommand(options: GenerateOptions): Promise<Generat
   }
 
   // Load the map
-  const mapManager = new DoctypeMapManager(mapPath);
+  const mapManager = new SintesiMapManager(mapPath);
   const entries = mapManager.getEntries();
 
   if (entries.length === 0) {
@@ -104,7 +104,7 @@ export async function generateCommand(options: GenerateOptions): Promise<Generat
   }
 
   // Second pass: Scan for "TODO" placeholders even if hashes match
-  // This enables "doctype generate" to work after "doctype init"
+  // This enables "sintesi generate" to work after "doctype init"
   const driftedIds = new Set(detectedDrifts.map(d => d.entry.id));
   const projectBase = config ? (config.baseDir || process.cwd()) : dirname(mapPath);
 
@@ -124,7 +124,7 @@ export async function generateCommand(options: GenerateOptions): Promise<Generat
     try {
       const docContent = readFileSync(docFilePath, 'utf-8');
       const extractionResult = extractAnchors(docFilePath, docContent);
-      const anchor = extractionResult.anchors.find((a: DoctypeAnchor) => a.id === entry.id);
+      const anchor = extractionResult.anchors.find((a: SintesiAnchor) => a.id === entry.id);
 
       if (anchor && anchor.content.includes('TODO: Add documentation for this symbol')) {
         logger.debug(`Found placeholder for ${entry.codeRef.symbolName}, marking for generation`);

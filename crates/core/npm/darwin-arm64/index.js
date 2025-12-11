@@ -26,10 +26,10 @@ switch (platform) {
   case 'darwin':
     switch (arch) {
       case 'arm64':
-        localFileExisted = existsSync(join(__dirname, 'doctype-core.darwin-arm64.node'))
+        localFileExisted = existsSync(join(__dirname, 'sintesi-core.darwin-arm64.node'))
         try {
           if (localFileExisted) {
-            nativeBinding = require('./doctype-core.darwin-arm64.node')
+            nativeBinding = require('./sintesi-core.darwin-arm64.node')
           } else {
             nativeBinding = require('@sintesi/core-darwin-arm64')
           }

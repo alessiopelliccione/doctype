@@ -10,10 +10,10 @@
  * - Auto-committing
  */
 
-import { DoctypeMapManager } from '../../../content/map-manager';
+import { SintesiMapManager } from '../../../content/map-manager';
 import { ContentInjector } from '../../../content/content-injector';
 import { MarkdownAnchorInserter } from '../../../content/markdown-anchor-inserter';
-import { extractAnchors, DoctypeAnchor } from '@sintesi/core';
+import { extractAnchors, SintesiAnchor } from '@sintesi/core';
 import { Logger } from '../utils/logger';
 import { FixResult, FixOptions, FixDetail } from '../types';
 import { DriftInfo } from '../services/drift-detector';
@@ -72,7 +72,7 @@ async function pMap<T, R>(
  */
 export async function executeFixes(
   drifts: DriftInfo[],
-  mapManager: DoctypeMapManager,
+  mapManager: SintesiMapManager,
   options: FixOptions,
   config: SintesiConfig | undefined,
   logger: Logger,
@@ -133,7 +133,7 @@ export async function executeFixes(
           if (existsSync(docFilePath)) {
             const docContent = readFileSync(docFilePath, 'utf-8');
             const extractionResult = extractAnchors(docFilePath, docContent);
-            const anchor = extractionResult.anchors.find((a: DoctypeAnchor) => a.id === entry.id);
+            const anchor = extractionResult.anchors.find((a: SintesiAnchor) => a.id === entry.id);
             if (anchor) {
               currentMarkdownContent = anchor.content;
             }
@@ -207,7 +207,7 @@ export async function executeFixes(
           if (existsSync(docFilePath)) {
              const content = readFileSync(docFilePath, 'utf-8');
              const anchors = extractAnchors(docFilePath, content).anchors;
-             anchorExists = anchors.some((a: DoctypeAnchor) => a.id === entry.id);
+             anchorExists = anchors.some((a: SintesiAnchor) => a.id === entry.id);
           }
 
           const writeToFile = !options.dryRun;

@@ -116,7 +116,7 @@ function loadNativeModule(): any {
       `This usually means the package was not installed correctly.\n` +
       `Try running: ${installHint}\n\n` +
       `If the problem persists, please file an issue at:\n` +
-      `https://github.com/doctypedev/doctype/issues\n\n` +
+      `https://github.com/doctypedev/sintesi/issues\n\n` +
       `Original error: ${err instanceof Error ? err.message : String(err)}`
     );
   }
@@ -157,13 +157,13 @@ export const getProjectContext = getProjectContextVal as typeof CoreTypes.getPro
 export type CodeSignature = CoreTypes.CodeSignature;
 export type SignatureHash = CoreTypes.SignatureHash;
 export type DocRef = CoreTypes.DocRef;
-export type DoctypeMapEntry = CoreTypes.DoctypeMapEntry;
-export type DoctypeMap = CoreTypes.DoctypeMap;
+export type SintesiMapEntry = CoreTypes.SintesiMapEntry;
+export type SintesiMap = CoreTypes.SintesiMap;
 export type FileDiscoveryResult = CoreTypes.FileDiscoveryResult;
 export type FileDiscoveryOptions = CoreTypes.FileDiscoveryOptions;
 
 // Markdown extraction types
-export type DoctypeAnchor = CoreTypes.DoctypeAnchor;
+export type SintesiAnchor = CoreTypes.SintesiAnchor;
 export type ExtractionResult = CoreTypes.ExtractionResult;
 export type CodeRefParts = CoreTypes.CodeRefParts;
 

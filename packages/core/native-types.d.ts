@@ -5,7 +5,7 @@
 
 /**
  *
- * Core type definitions for Doctype
+ * Core type definitions for Sintesi
 
  *
  * Reference to a code symbol in the source code
@@ -67,9 +67,9 @@ export interface DocRef {
  *
  * Note: Content is not stored here to avoid duplication.
  * The markdown file is the single source of truth for content.
- * Use the anchor ID to locate content between doctype:start and doctype:end tags.
+ * Use the anchor ID to locate content between sintesi:start and sintesi:end tags.
  */
-export interface DoctypeMapEntry {
+export interface SintesiMapEntry {
   /** Unique identifier for this anchor */
   id: string;
   /** Reference to the code */
@@ -86,11 +86,11 @@ export interface DoctypeMapEntry {
 /**
  * The complete sintesi-map.json structure
  */
-export interface DoctypeMap {
+export interface SintesiMap {
   /** Schema version for future compatibility */
   version: string;
   /** All tracked documentation anchors */
-  entries: Array<DoctypeMapEntry>;
+  entries: Array<SintesiMapEntry>;
 }
 /** Analysis result including errors (for NAPI) */
 export interface AnalysisResultJs {
@@ -148,8 +148,8 @@ export declare function discoverFiles(
   rootPath: string,
   options?: FileDiscoveryOptions | undefined | null,
 ): FileDiscoveryResult;
-/** NAPI-compatible doctype anchor structure */
-export interface DoctypeAnchor {
+/** NAPI-compatible sintesi anchor structure */
+export interface SintesiAnchor {
   /** Unique anchor ID */
   id: string;
   /** Code reference (e.g., "src/auth.ts#login") */
@@ -166,14 +166,14 @@ export interface DoctypeAnchor {
 /** NAPI-compatible extraction result */
 export interface ExtractionResult {
   /** Map of anchor ID to anchor data (as a flat array for NAPI compatibility) */
-  anchors: Array<DoctypeAnchor>;
+  anchors: Array<SintesiAnchor>;
   /** Number of anchors found */
   anchorCount: number;
   /** Errors encountered during extraction */
   errors: Array<string>;
 }
 /**
- * Extract doctype anchors from markdown content
+ * Extract sintesi anchors from markdown content
  *
  * # Arguments
  * * `file_path` - Path to the markdown file (for reference)
@@ -207,7 +207,7 @@ export declare function extractAnchors(
   content: string,
 ): ExtractionResult;
 /**
- * Validate markdown content for doctype anchors
+ * Validate markdown content for sintesi anchors
  *
  * This performs validation without extracting content, making it faster
  * for checking if markdown is valid.

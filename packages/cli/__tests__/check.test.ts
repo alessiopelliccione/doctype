@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { checkCommand } from '../src/commands/check';
-import { DoctypeMapManager } from '../../content/map-manager';
+import { SintesiMapManager } from '../../content/map-manager';
 import { AstAnalyzer } from '@sintesi/core';
 import { writeFileSync, unlinkSync, existsSync, mkdirSync } from 'fs';
 import { join } from 'path';
@@ -23,7 +23,7 @@ describe('CLI: check command', () => {
       mkdirSync(testDir, { recursive: true });
     }
 
-    // Create doctype config file
+    // Create sintesi config file
     const configPath = join(testDir, 'sintesi.config.json');
     const config = {
       projectName: 'test-project',
@@ -41,9 +41,9 @@ describe('CLI: check command', () => {
 
     // Create test doc file with anchor
     const testDoc = `# Test
-<!-- doctype:start id="test-id" code_ref="test.ts#testFunc" -->
+<!-- sintesi:start id="test-id" code_ref="test.ts#testFunc" -->
 Test documentation
-<!-- doctype:end id="test-id" -->`;
+<!-- sintesi:end id="test-id" -->`;
     writeFileSync(testDocFile, testDoc);
 
     // Create test map with correct hash
@@ -53,7 +53,7 @@ Test documentation
 
     if (signature && signature.hash) {
       const hash = signature.hash;
-      const manager = new DoctypeMapManager(testMapPath);
+      const manager = new SintesiMapManager(testMapPath);
       manager.addEntry({
         id: 'test-id',
         codeRef: {
@@ -135,7 +135,7 @@ Test documentation
 
   it('should handle empty map file', async () => {
     // Create empty map
-    const emptyManager = new DoctypeMapManager(testMapPath);
+    const emptyManager = new SintesiMapManager(testMapPath);
     emptyManager.clear();
     emptyManager.save();
 
