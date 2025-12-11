@@ -55,6 +55,7 @@ You'll be presented with a menu to:
 - **Generate** new content
 - **Create Changesets**
 - **Generate README** - Create a README file based on your project structure
+- **Generate Documentation** - Automatically create documentation using AI
 
 ### 3. Or Use Individual Commands
 
@@ -93,6 +94,11 @@ sintesi check --smart
 **Create Changesets:**
 ```bash
 sintesi changeset
+```
+
+**Generate Documentation:**
+```bash
+sintesi documentation
 ```
 
 ---
@@ -323,17 +329,18 @@ sintesi fix --auto-commit
 6. (Optional) Prunes dead entries if `--prune` is used.
 7. (Optional) Auto-commits with message: `🤖 Sintesi Bot: Auto-fix documentation for login`
 
-### `sintesi readme`
+### `sintesi documentation`
 
-Generate a README file based on your project structure.
+Generate project documentation automatically.
 
 ```bash
-sintesi readme
+sintesi documentation
 ```
 
 **What it does:**
-1. Scans your project for relevant information.
-2. Creates a structured README file with sections for installation, usage, and commands.
+1. Analyzes the project structure.
+2. Generates documentation files based on the current state of the codebase.
+3. Uses AI to suggest relevant documentation updates and new files.
 
 ---
 
