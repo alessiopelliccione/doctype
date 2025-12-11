@@ -8,10 +8,9 @@
 import { GitHelper } from '../utils/git-helper';
 import { Logger } from '../utils/logger';
 import { ASTAnalyzer, CodeSignature } from '@sintesi/core';
-import { existsSync } from 'fs';
 import { unlink, writeFile } from 'fs/promises';
-import * as path from 'path';
 import { execSync } from 'child_process';
+import * as path from 'path';
 import { randomUUID } from 'crypto';
 import { tmpdir } from 'os';
 
@@ -132,7 +131,7 @@ export class ChangeAnalysisService {
         }
 
         // Helper to determine what "old" means
-        function paramsForAnalysis(isLastCommit: boolean, base: string) {
+        function paramsForAnalysis(isLastCommit: boolean, base: string): string {
             // If we looked at last commit (HEAD), the "old" version is HEAD~1
             // If we looked against base, the "old" version is base
             return isLastCommit ? 'HEAD~1' : base;

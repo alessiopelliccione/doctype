@@ -1,6 +1,5 @@
 import { existsSync, readFileSync } from 'fs';
 import { resolve } from 'path';
-import { execSync } from 'child_process';
 import { Logger } from '../utils/logger';
 import { createAgentFromEnv } from '../../../ai';
 import { ChangeAnalysisService } from './analysis-service';

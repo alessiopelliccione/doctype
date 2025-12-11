@@ -10,9 +10,7 @@ import { getProjectContext, ProjectContext } from '@sintesi/core';
 import { resolve } from 'path';
 import { readFileSync, writeFileSync, existsSync, unlinkSync } from 'fs';
 import { spinner } from '@clack/prompts';
-import { GitHelper } from '../utils/git-helper';
 import { ChangeAnalysisService } from '../services/analysis-service';
-import { execSync } from 'child_process';
 
 export interface ReadmeOptions {
   output?: string;

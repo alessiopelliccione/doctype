@@ -154,6 +154,8 @@ export const validateMarkdownAnchors = validateMarkdownAnchorsVal as typeof Core
 export const parseCodeRef = parseCodeRefVal as typeof CoreTypes.parseCodeRef;
 export const getProjectContext = getProjectContextVal as typeof CoreTypes.getProjectContext;
 
+export type AstAnalyzer = CoreTypes.AstAnalyzer;
+
 export type CodeSignature = CoreTypes.CodeSignature;
 export type SignatureHash = CoreTypes.SignatureHash;
 export type DocRef = CoreTypes.DocRef;
