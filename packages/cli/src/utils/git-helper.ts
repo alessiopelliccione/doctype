@@ -2,7 +2,7 @@
  * Git operations helper for auto-commit functionality
  */
 
-import { execSync } from 'child_process';
+import { execSync, spawnSync } from 'child_process';
 import { Logger } from './logger';
 
 /**
@@ -151,6 +151,8 @@ export class GitHelper {
     } catch (error) {
       this.logger.debug(`Failed to get diff against base ${base}: ${error instanceof Error ? error.message : String(error)}`);
       // Fallback: compare directly against whatever 'base' is resolvable to
+      // Logic: If merge-base fails (e.g. shallow clone), we try a direct diff between the two tips.
+      // This is less accurate for divergence but better than nothing.
       try {
         return execSync(`git diff ${base} HEAD`, { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 });
       } catch {
@@ -163,23 +165,41 @@ export class GitHelper {
    * Get filtered diff (excluding locks)
    */
   getFilteredDiff(base: string, staged: boolean = false): string {
+    // Defines excludes as an array for safe passing to spawnSync
+    // This avoids shell quoting issues on Windows (PowerShell/CMD)
     const excludes = [
-      "':(exclude)package-lock.json'",
-      "':(exclude)yarn.lock'",
-      "':(exclude)pnpm-lock.yaml'"
-    ].join(' ');
+      ':(exclude)package-lock.json',
+      ':(exclude)yarn.lock',
+      ':(exclude)pnpm-lock.yaml'
+    ];
 
     try {
+      const args = ['diff'];
       if (staged) {
-        return execSync(`git diff --cached -- . ${excludes}`, { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 });
+        args.push('--cached');
+      } else {
+        const mergeBase = this.getMergeBase(base);
+        if (mergeBase) {
+          args.push(`${mergeBase}..HEAD`);
+        } else {
+          args.push(`${base}...HEAD`);
+        }
       }
 
-      const mergeBase = this.getMergeBase(base);
-      if (mergeBase) {
-        return execSync(`git diff ${mergeBase}..HEAD -- . ${excludes}`, { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 });
+      // Add standard args
+      args.push('--', '.', ...excludes);
+
+      const result = spawnSync('git', args, { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 });
+
+      if (result.error) {
+        throw result.error;
       }
 
-      return execSync(`git diff ${base}...HEAD -- . ${excludes}`, { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 });
+      if (result.stderr && result.stderr.trim().length > 0) {
+        this.logger.debug(`Git diff stderr: ${result.stderr}`);
+      }
+
+      return result.stdout || '';
     } catch (error) {
       this.logger.debug(`Failed to get filtered diff: ${error}`);
       return '';

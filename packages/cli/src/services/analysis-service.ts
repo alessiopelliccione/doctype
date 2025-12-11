@@ -12,6 +12,8 @@ import { existsSync } from 'fs';
 import { unlink, writeFile } from 'fs/promises';
 import * as path from 'path';
 import { execSync } from 'child_process';
+import { randomUUID } from 'crypto';
+import { tmpdir } from 'os';
 
 export interface SymbolChange {
     symbolName: string;
@@ -170,12 +172,18 @@ export class ChangeAnalysisService {
                 let oldSymbols: CodeSignature[] = [];
 
                 if (oldContent) {
-                    const tempFile = `${filePath}.temp.analysis`;
-                    await writeFile(tempFile, oldContent);
+                    // Use a unique temp file in the system temp directory to avoid collisions and pollution
+                    const ext = path.extname(filePath);
+                    const tempFile = path.join(tmpdir(), `doctype-analysis-${randomUUID()}${ext}`);
+
                     try {
+                        await writeFile(tempFile, oldContent);
                         oldSymbols = await this.astAnalyzer.analyzeFile(tempFile);
                     } finally {
-                        await unlink(tempFile).catch(() => { });
+                        // Ensure cleanup happens even if analysis fails or is interrupted
+                        await unlink(tempFile).catch(() => {
+                            // Ignore cleanup errors (file might not exist if write failed)
+                        });
                     }
                 }
 
