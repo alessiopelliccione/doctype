@@ -1,15 +1,15 @@
 /**
- * Native module loader for @doctypedev/core
+ * Native module loader for @sintesi/core
  *
  * This module loads the correct platform-specific NAPI binary.
  * Binaries are published as separate packages for each supported platform.
  *
  * Supported platforms:
- * - @doctypedev/core-darwin-arm64 (macOS Apple Silicon)
- * - @doctypedev/core-darwin-x64 (macOS Intel)
- * - @doctypedev/core-linux-x64 (Linux x64)
- * - @doctypedev/core-linux-arm64 (Linux ARM64)
- * - @doctypedev/core-win32-x64 (Windows x64)
+ * - @sintesi/core-darwin-arm64 (macOS Apple Silicon)
+ * - @sintesi/core-darwin-x64 (macOS Intel)
+ * - @sintesi/core-linux-x64 (Linux x64)
+ * - @sintesi/core-linux-arm64 (Linux ARM64)
+ * - @sintesi/core-win32-x64 (Windows x64)
  */
 
 import * as os from 'os';
@@ -17,9 +17,9 @@ import * as path from 'path';
 
 // Platform to package name mapping
 const PLATFORM_PACKAGES: Record<string, string> = {
-  'darwin-arm64': '@doctypedev/core-darwin-arm64',
-  'linux-x64': '@doctypedev/core-linux-x64-gnu',
-  'win32-x64': '@doctypedev/core-win32-x64-msvc',
+  'darwin-arm64': '@sintesi/core-darwin-arm64',
+  'linux-x64': '@sintesi/core-linux-x64-gnu',
+  'win32-x64': '@sintesi/core-win32-x64-msvc',
 };
 
 /**
@@ -36,7 +36,7 @@ function getPlatformPackageName(): string {
     throw new Error(
       `Unsupported platform: ${platform}-${arch}\n` +
       `Supported platforms: ${supported}\n` +
-      `Please file an issue at: https://github.com/doctypedev/doctype/issues`
+      `Please file an issue at: https://github.com/doctypedev/sintesi/issues`
     );
   }
 
@@ -116,7 +116,7 @@ function loadNativeModule(): any {
       `This usually means the package was not installed correctly.\n` +
       `Try running: ${installHint}\n\n` +
       `If the problem persists, please file an issue at:\n` +
-      `https://github.com/doctypedev/doctype/issues\n\n` +
+      `https://github.com/doctypedev/sintesi/issues\n\n` +
       `Original error: ${err instanceof Error ? err.message : String(err)}`
     );
   }
@@ -157,13 +157,13 @@ export const getProjectContext = getProjectContextVal as typeof CoreTypes.getPro
 export type CodeSignature = CoreTypes.CodeSignature;
 export type SignatureHash = CoreTypes.SignatureHash;
 export type DocRef = CoreTypes.DocRef;
-export type DoctypeMapEntry = CoreTypes.DoctypeMapEntry;
-export type DoctypeMap = CoreTypes.DoctypeMap;
+export type SintesiMapEntry = CoreTypes.SintesiMapEntry;
+export type SintesiMap = CoreTypes.SintesiMap;
 export type FileDiscoveryResult = CoreTypes.FileDiscoveryResult;
 export type FileDiscoveryOptions = CoreTypes.FileDiscoveryOptions;
 
 // Markdown extraction types
-export type DoctypeAnchor = CoreTypes.DoctypeAnchor;
+export type SintesiAnchor = CoreTypes.SintesiAnchor;
 export type ExtractionResult = CoreTypes.ExtractionResult;
 export type CodeRefParts = CoreTypes.CodeRefParts;
 

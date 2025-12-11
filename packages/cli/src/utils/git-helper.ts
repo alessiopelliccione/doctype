@@ -199,17 +199,17 @@ export class GitHelper {
    */
   private createCommitMessage(symbolNames: string[]): string {
     if (symbolNames.length === 0) {
-      return '🤖 Doctype Bot: Auto-fix documentation';
+      return '🤖 Sintesi Bot: Auto-fix documentation';
     }
 
     if (symbolNames.length === 1) {
-      return `🤖 Doctype Bot: Auto-fix documentation for ${symbolNames[0]}`;
+      return `🤖 Sintesi Bot: Auto-fix documentation for ${symbolNames[0]}`;
     }
 
     if (symbolNames.length <= 3) {
-      return `🤖 Doctype Bot: Auto-fix documentation for ${symbolNames.join(', ')}`;
+      return `🤖 Sintesi Bot: Auto-fix documentation for ${symbolNames.join(', ')}`;
     }
 
-    return `🤖 Doctype Bot: Auto-fix documentation for ${symbolNames.length} symbols`;
+    return `🤖 Sintesi Bot: Auto-fix documentation for ${symbolNames.length} symbols`;
   }
 }

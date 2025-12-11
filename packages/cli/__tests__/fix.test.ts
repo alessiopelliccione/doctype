@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { fixCommand } from '../src/commands/fix';
-import { DoctypeMapManager } from '../../content/map-manager';
-import { AstAnalyzer } from '@doctypedev/core';
+import { SintesiMapManager } from '../../content/map-manager';
+import { AstAnalyzer } from '@sintesi/core';
 import { writeFileSync, unlinkSync, existsSync, mkdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -31,7 +31,7 @@ describe('CLI: fix command', () => {
   beforeEach(() => {
     originalCwd = process.cwd();
     testDir = join(originalCwd, 'test-cli-fix');
-    testMapPath = join(testDir, 'doctype-map.json');
+    testMapPath = join(testDir, 'sintesi-map.json');
     testCodeFile = join(testDir, 'test.ts');
     testDocFile = join(testDir, 'test.md');
 
@@ -40,21 +40,21 @@ describe('CLI: fix command', () => {
       mkdirSync(testDir, { recursive: true });
     }
 
-    // Create doctype config file
-    const configPath = join(testDir, 'doctype.config.json');
+    // Create sintesi config file
+    const configPath = join(testDir, 'sintesi.config.json');
     const config = {
       projectName: 'test-project',
       projectRoot: testDir,
       docsFolder: 'docs',
-      mapFile: 'doctype-map.json',
+      mapFile: 'sintesi-map.json',
     };
     writeFileSync(configPath, JSON.stringify(config, null, 2));
 
     // Create test doc file with anchor
     const testDoc = `# Test
-<!-- doctype:start id="test-id" code_ref="${testCodeFile}#testFunc" -->
+<!-- sintesi:start id="test-id" code_ref="${testCodeFile}#testFunc" -->
 Old documentation
-<!-- doctype:end id="test-id" -->`;
+<!-- sintesi:end id="test-id" -->`;
     writeFileSync(testDocFile, testDoc);
 
     // Step 1: Create map with OLD hash (from old code signature)
@@ -71,7 +71,7 @@ Old documentation
 
     if (oldSignature && oldSignature.hash) {
       const oldHash = oldSignature.hash;
-      const manager = new DoctypeMapManager(testMapPath);
+      const manager = new SintesiMapManager(testMapPath);
       manager.addEntry({
         id: 'test-id',
         codeRef: {
@@ -105,7 +105,7 @@ Old documentation
     process.chdir(originalCwd);
 
     // Cleanup
-    const configPath = join(testDir, 'doctype.config.json');
+    const configPath = join(testDir, 'sintesi.config.json');
     if (existsSync(testCodeFile)) unlinkSync(testCodeFile);
     if (existsSync(testDocFile)) unlinkSync(testDocFile);
     if (existsSync(testMapPath)) unlinkSync(testMapPath);
@@ -133,8 +133,8 @@ Old documentation
 
     // Verify doc file was updated
     const updatedDoc = readFileSync(testDocFile, 'utf-8');
-    expect(updatedDoc).toContain('<!-- doctype:start id="test-id"');
-    expect(updatedDoc).toContain('<!-- doctype:end id="test-id" -->');
+    expect(updatedDoc).toContain('<!-- sintesi:start id="test-id"');
+    expect(updatedDoc).toContain('<!-- sintesi:end id="test-id" -->');
     expect(updatedDoc).not.toContain('Old documentation');
   });
 
@@ -172,7 +172,7 @@ Old documentation
 
     if (signature && signature.hash) {
       const currentHash = signature.hash;
-      const manager = new DoctypeMapManager(testMapPath);
+      const manager = new SintesiMapManager(testMapPath);
       manager.updateEntry('test-id', {
         codeSignatureHash: currentHash,
       });
@@ -196,7 +196,7 @@ Old documentation
     });
 
     // Load updated map
-    const manager = new DoctypeMapManager(testMapPath);
+    const manager = new SintesiMapManager(testMapPath);
     const entry = manager.getEntryById('test-id');
 
     expect(entry).toBeDefined();

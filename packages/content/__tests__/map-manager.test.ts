@@ -1,18 +1,18 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { DoctypeMapManager } from '../map-manager';
-import { DoctypeMapEntry } from '@doctypedev/core';
+import { SintesiMapManager } from '../map-manager';
+import { SintesiMapEntry } from '@sintesi/core';
 import { existsSync, unlinkSync } from 'fs';
 
-describe('DoctypeMapManager', () => {
-  const testMapPath = './test-doctype-map.json';
-  let manager: DoctypeMapManager;
+describe('SintesiMapManager', () => {
+  const testMapPath = './test-sintesi-map.json';
+  let manager: SintesiMapManager;
 
   beforeEach(() => {
     // Clean up test file if it exists
     if (existsSync(testMapPath)) {
       unlinkSync(testMapPath);
     }
-    manager = new DoctypeMapManager(testMapPath);
+    manager = new SintesiMapManager(testMapPath);
   });
 
   afterEach(() => {
@@ -22,7 +22,7 @@ describe('DoctypeMapManager', () => {
     }
   });
 
-  const createTestEntry = (id: string): DoctypeMapEntry => ({
+  const createTestEntry = (id: string): SintesiMapEntry => ({
     id,
     codeRef: {
       filePath: 'src/test.ts',
@@ -46,7 +46,7 @@ describe('DoctypeMapManager', () => {
       manager.addEntry(entry);
       manager.save();
 
-      const newManager = new DoctypeMapManager(testMapPath);
+      const newManager = new SintesiMapManager(testMapPath);
       expect(newManager.getEntryCount()).toBe(1);
       expect(newManager.getEntryById('test-id-1')).toBeDefined();
     });
@@ -249,7 +249,7 @@ describe('DoctypeMapManager', () => {
 
       expect(existsSync(testMapPath)).toBe(true);
 
-      const newManager = new DoctypeMapManager(testMapPath);
+      const newManager = new SintesiMapManager(testMapPath);
       expect(newManager.getEntryCount()).toBe(2);
     });
   });

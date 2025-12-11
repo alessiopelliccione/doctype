@@ -8,12 +8,12 @@ import pc from 'picocolors';
 
 export async function showMainMenu() {
     console.clear();
-    intro(pc.bgCyan(pc.black(' Doctype CLI ')));
+    intro(pc.bgCyan(pc.black(' Sintesi CLI ')));
 
     const action = await select({
         message: 'What would you like to do?',
         options: [
-            {value: 'init', label: 'Initialize Doctype configuration', hint: 'init'},
+            {value: 'init', label: 'Initialize Sintesi configuration', hint: 'init'},
             {value: 'check', label: 'Check for documentation drift', hint: 'check'},
             {value: 'generate', label: '[AI] Generate documentation', hint: 'generate'},
             {value: 'changeset', label: '[AI] Generate changeset file', hint: 'changeset'},

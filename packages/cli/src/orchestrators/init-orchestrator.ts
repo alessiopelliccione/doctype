@@ -5,17 +5,17 @@
  * - Scanning codebases for TypeScript files
  * - Extracting symbols and generating signatures
  * - Creating documentation anchors
- * - Managing the doctype-map.json
+ * - Managing the sintesi-map.json
  *
  * This is pure business logic with no CLI dependencies.
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { AstAnalyzer, SymbolType, discoverFiles } from '@doctypedev/core';
-import { DoctypeMapManager } from '../../../content/map-manager';
+import { AstAnalyzer, SymbolType, discoverFiles } from '@sintesi/core';
+import { SintesiMapManager } from '../../../content/map-manager';
 import { MarkdownAnchorInserter } from '../../../content/markdown-anchor-inserter';
-import type { DoctypeMapEntry, SymbolTypeValue, CodeSignature } from '@doctypedev/core';
+import type { SintesiMapEntry, SymbolTypeValue, CodeSignature } from '@sintesi/core';
 
 /**
  * Output strategy for documentation files
@@ -123,7 +123,7 @@ function generateMarkdownTitle(docPath: string): string {
  * 2. Analyzes each file for exported symbols
  * 3. Generates signature hashes
  * 4. Creates documentation anchors in markdown files
- * 5. Updates the doctype-map.json
+ * 5. Updates the sintesi-map.json
  *
  * @param config - Configuration for the scan
  * @param onProgress - Optional callback for progress updates
@@ -152,7 +152,7 @@ export async function scanAndCreateAnchors(
 
   // Initialize modules
   const analyzer = new AstAnalyzer();
-  const mapManager = new DoctypeMapManager(mapFilePath);
+  const mapManager = new SintesiMapManager(mapFilePath);
   const anchorInserter = new MarkdownAnchorInserter();
 
   // Clear existing map to avoid ghost drift - we want to rebuild it based on
@@ -274,7 +274,7 @@ export async function scanAndCreateAnchors(
       docContent = fs.readFileSync(docPath, 'utf-8');
     } else {
       const title = generateMarkdownTitle(docPath);
-      docContent = `# ${title}\n\nAuto-generated documentation via Doctype.\n\n`;
+      docContent = `# ${title}\n\nAuto-generated documentation via Sintesi.\n\n`;
       isNewFile = true;
       result.filesCreated++;
     }
@@ -326,7 +326,7 @@ export async function scanAndCreateAnchors(
       // Add to map (which was cleared at start)
       // We add it regardless of whether it was existing or new, ensuring
       // the map is fully in sync with codebase + docs.
-      const mapEntry: DoctypeMapEntry = {
+      const mapEntry: SintesiMapEntry = {
         id: anchorId,
         codeRef: {
           filePath: symbol.filePath,

@@ -4,8 +4,8 @@
  * Verifies that documentation is in sync with code by detecting drift
  */
 
-import { DoctypeMapManager } from '../../../content/map-manager';
-import { AstAnalyzer } from '@doctypedev/core';
+import { SintesiMapManager } from '../../../content/map-manager';
+import { AstAnalyzer } from '@sintesi/core';
 import { Logger } from '../utils/logger';
 import { CheckResult, CheckOptions, DriftDetail } from '../types';
 import { detectDrift } from '../services/drift-detector';
@@ -24,7 +24,7 @@ import {
 export async function checkCommand(options: CheckOptions): Promise<CheckResult> {
   const logger = new Logger(options.verbose);
 
-  logger.header('🔍 Doctype Check - Drift Detection');
+  logger.header('🔍 Sintesi Check - Drift Detection');
 
   // Load configuration file (required for all commands except init)
   let config;
@@ -70,11 +70,11 @@ export async function checkCommand(options: CheckOptions): Promise<CheckResult> 
   }
 
   // Load the map
-  const mapManager = new DoctypeMapManager(mapPath);
+  const mapManager = new SintesiMapManager(mapPath);
   const entries = mapManager.getEntries();
 
   if (entries.length === 0) {
-    logger.warn('No entries found in doctype-map.json');
+    logger.warn('No entries found in sintesi-map.json');
     logger.info('Add documentation anchors to your Markdown files to track them');
     return {
       totalEntries: 0,
@@ -179,12 +179,12 @@ export async function checkCommand(options: CheckOptions): Promise<CheckResult> 
       }
 
       logger.newline();
-      logger.info('Run `npx doctype fix` to automatically document these symbols.');
+      logger.info('Run `npx sintesi fix` to automatically document these symbols.');
       logger.newline();
     }
 
     if (drifts.length > 0) {
-      logger.info('Run `npx doctype fix` to update the documentation');
+      logger.info('Run `npx sintesi fix` to update the documentation');
     }
   }
 

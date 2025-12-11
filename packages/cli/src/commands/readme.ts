@@ -6,7 +6,7 @@
 
 import { Logger } from '../utils/logger';
 import { createAgentFromEnv } from '../../../ai';
-import { getProjectContext, ProjectContext } from '@doctypedev/core';
+import { getProjectContext, ProjectContext } from '@sintesi/core';
 import { resolve } from 'path';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { spinner } from '@clack/prompts';
@@ -21,7 +21,7 @@ export interface ReadmeOptions {
 
 export async function readmeCommand(options: ReadmeOptions): Promise<void> {
   const logger = new Logger(options.verbose);
-  logger.header('✨ Doctype Readme - Project Context Generation');
+  logger.header('✨ Sintesi Readme - Project Context Generation');
 
   const cwd = process.cwd();
   const outputPath = resolve(cwd, options.output || 'README.md');

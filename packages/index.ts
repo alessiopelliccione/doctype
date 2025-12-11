@@ -1,7 +1,7 @@
 /**
- * Doctype - The Self-Maintaining Documentation System
+ * Sintesi - The Self-Maintaining Documentation System
  *
- * Main entry point for the Doctype library
+ * Main entry point for the Sintesi library
  */
 
 // Core AST & Drift Detection
@@ -18,8 +18,8 @@ export type {
   CodeSignature,
   SignatureHash,
   DocRef,
-  DoctypeMapEntry,
-  DoctypeMap,
+  SintesiMapEntry,
+  SintesiMap,
   FileDiscoveryResult,
   FileDiscoveryOptions,
 } from './core';
@@ -29,11 +29,11 @@ export {
   extractAnchors,
   validateMarkdownAnchors,
   parseCodeRef,
-  DoctypeMapManager,
+  SintesiMapManager,
   ContentInjector,
 } from './content';
 export type {
-  DoctypeAnchor,
+  SintesiAnchor,
   ExtractionResult,
   CodeRefParts,
   InjectionResult,
