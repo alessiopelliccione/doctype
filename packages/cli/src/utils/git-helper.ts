@@ -2,7 +2,7 @@
  * Git operations helper for auto-commit functionality
  */
 
-import { execSync } from 'child_process';
+import { execSync, spawnSync } from 'child_process';
 import { Logger } from './logger';
 
 /**
@@ -120,13 +120,88 @@ export class GitHelper {
   }
 
   /**
+   * Get merge base between HEAD and a base branch
+   */
+  getMergeBase(base: string): string | null {
+    try {
+      return execSync(`git merge-base ${base} HEAD`, { encoding: 'utf-8', stdio: 'pipe' }).trim();
+    } catch {
+      this.logger.debug(`Could not find merge base with ${base}`);
+      return null;
+    }
+  }
+
+  /**
    * Get diff against a base branch
    */
   getDiffAgainstBase(base: string): string {
     try {
+      // First try to find a merge base to capture the divergence
+      const mergeBase = this.getMergeBase(base);
+
+      if (mergeBase) {
+        // Diff from merge-base to HEAD
+        // This is safe even if base is remote and we have local commits
+        return execSync(`git diff ${mergeBase}..HEAD`, { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 });
+      }
+
+      // If no merge base (shallow clone?), try direct comparison
+      // The triple dot ... in 'git diff base...HEAD' actually implies using merge base unless it falls back
       return execSync(`git diff ${base}...HEAD`, { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 });
     } catch (error) {
       this.logger.debug(`Failed to get diff against base ${base}: ${error instanceof Error ? error.message : String(error)}`);
+      // Fallback: compare directly against whatever 'base' is resolvable to
+      // Logic: If merge-base fails (e.g. shallow clone), we try a direct diff between the two tips.
+      // This is less accurate for divergence but better than nothing.
+      try {
+        return execSync(`git diff ${base} HEAD`, { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 });
+      } catch {
+        return '';
+      }
+    }
+  }
+
+  /**
+   * Get filtered diff (excluding locks)
+   */
+  getFilteredDiff(base: string, staged: boolean = false): string {
+    // Defines excludes as an array for safe passing to spawnSync
+    // This avoids shell quoting issues on Windows (PowerShell/CMD)
+    const excludes = [
+      ':(exclude)package-lock.json',
+      ':(exclude)yarn.lock',
+      ':(exclude)pnpm-lock.yaml'
+    ];
+
+    try {
+      const args = ['diff'];
+      if (staged) {
+        args.push('--cached');
+      } else {
+        const mergeBase = this.getMergeBase(base);
+        if (mergeBase) {
+          args.push(`${mergeBase}..HEAD`);
+        } else {
+          args.push(`${base}...HEAD`);
+        }
+      }
+
+      // Add standard args
+      args.push('--', '.', ...excludes);
+
+      const result = spawnSync('git', args, { encoding: 'utf-8', maxBuffer: 10 * 1024 * 1024 });
+
+      if (result.error) {
+        throw result.error;
+      }
+
+      if (result.stderr && result.stderr.trim().length > 0) {
+        this.logger.debug(`Git diff stderr: ${result.stderr}`);
+      }
+
+      return result.stdout || '';
+    } catch (error) {
+      this.logger.debug(`Failed to get filtered diff: ${error}`);
       return '';
     }
   }
@@ -164,6 +239,25 @@ export class GitHelper {
       const escapedMessage = message.replace(/"/g, '\\"');
       const output = execSync(`git commit -m "${escapedMessage}"`, { encoding: 'utf-8' });
 
+      return {
+        success: true,
+        output: output.trim(),
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+  }
+
+  /**
+   * Fetch changes from remote
+   */
+  fetch(remote: string, branch: string): GitOperationResult {
+    try {
+      this.logger.debug(`Fetching ${remote} ${branch}`);
+      const output = execSync(`git fetch ${remote} ${branch}`, { encoding: 'utf-8' });
       return {
         success: true,
         output: output.trim(),
