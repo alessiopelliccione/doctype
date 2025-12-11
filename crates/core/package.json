@@ -1,6 +1,6 @@
 {
   "name": "@sintesi/core-native",
-  "version": "0.0.0",
+  "version": "0.7.0",
   "main": "index.js",
   "devDependencies": {
     "@napi-rs/cli": "^2.18.0",
