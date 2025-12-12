@@ -5,6 +5,32 @@ export class ImpactAnalyzer {
     constructor(private logger: Logger) { }
 
     /**
+     * Helper to centralize the check & logging logic.
+     * Returns TRUE if we should proceed with generation (update needed), FALSE if we should skip.
+     */
+    async checkWithLogging(
+        gitDiff: string,
+        docType: 'readme' | 'documentation',
+        aiAgents: AIAgents,
+        force: boolean = false
+    ): Promise<boolean> {
+        if (!gitDiff) return true; // No diff info? Assume we proceed or let downstream handle it.
+
+        const impact = await this.shouldUpdateDocs(gitDiff, docType, aiAgents);
+
+        if (!impact.update && !force) {
+            this.logger.success(`✨ Impact Analysis: No relevant changes detected. Skipping generation.`);
+            this.logger.info(`   Reason: ${impact.reason}`);
+            return false; // Skip
+        } else if (impact.update) {
+            this.logger.info(`✨ Impact Analysis: Update required.`);
+            this.logger.info(`   Reason: ${impact.reason}`);
+        }
+
+        return true; // Proceed
+    }
+
+    /**
      * Analyzes the git diff and determines if the documentation needs to be updated.
      * Returns a reason if NO update is needed.
      */
@@ -17,9 +43,18 @@ export class ImpactAnalyzer {
             return { update: false, reason: 'No git diff provided.' };
         }
 
-        // Heuristics: if git diff is tiny and only affects ignored files (like .gitignore, .github), skip.
-        // However, the caller usually passes a relevant diff. 
-        // We'll rely on the AI for semantic analysis.
+        // 1. Clean the diff (remove lockfiles, noise)
+        const cleanDiff = this.cleanDiff(gitDiff);
+
+        // 2. Safety Check: Truncation Risk
+        // If the cleaned diff is still massive, we risk truncating critical changes.
+        // Fallback to safe update.
+        if (cleanDiff.length > 20000) {
+            return {
+                update: true,
+                reason: 'Diff is too large (>20k chars) for semantic analysis. Forcing update to ensure no breaking changes are missed.'
+            };
+        }
 
         this.logger.info(`🔍 Performing Semantic Impact Analysis on ${docType}...`);
 
@@ -30,8 +65,7 @@ You will evaluate the provided "Git Diff" and decide if the "${docType}" needs t
 
 ## Git Diff
 \`\`\`diff
-${gitDiff.substring(0, 10000)}
-${gitDiff.length > 10000 ? '...(truncated)' : ''}
+${cleanDiff}
 \`\`\`
 
 ## Rules
@@ -49,6 +83,10 @@ ${gitDiff.length > 10000 ? '...(truncated)' : ''}
    - Changes to configuration options.
    - New features visible to the end-user.
    - Breaking changes.
+
+## Critical Instruction
+**If you are unsure or if the context is ambiguous, lean towards TRUE (update).**
+It is better to update unnecessarily than to miss a critical change.
 
 ## Output
 Return a JSON object:
@@ -79,7 +117,43 @@ Return a JSON object:
 
         } catch (e) {
             this.logger.warn(`Impact analysis failed (JSON parse error or AI error): ${e}. Defaulting to TRUE (safe mode).`);
-            return { update: true, reason: 'Analysis failed, falling back to safe update.' };
+            return { update: true, reason: 'Analysis failed (fallback to safe update).' };
         }
+    }
+
+    /**
+     * Filters out noisy files from the git diff to save tokens and improve focus.
+     */
+    private cleanDiff(fullDiff: string): string {
+        // Simple line-based filtering or chunk-based filtering.
+        // Git diffs usually look like:
+        // diff --git a/foo.ts b/foo.ts
+        // ... content ...
+
+        const chunks = fullDiff.split('diff --git ');
+        const keptChunks: string[] = [];
+
+        for (const chunk of chunks) {
+            if (!chunk.trim()) continue;
+
+            // Check the first line for filename
+            const firstLine = chunk.split('\n')[0];
+
+            // Filter patterns
+            if (
+                firstLine.includes('package-lock.json') ||
+                firstLine.includes('pnpm-lock.yaml') ||
+                firstLine.includes('yarn.lock') ||
+                firstLine.includes('.map') ||
+                firstLine.includes('.snap') ||
+                firstLine.includes('.DS_Store')
+            ) {
+                continue;
+            }
+
+            keptChunks.push('diff --git ' + chunk);
+        }
+
+        return keptChunks.join('\n');
     }
 }

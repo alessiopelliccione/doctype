@@ -64,14 +64,9 @@ export async function readmeCommand(options: ReadmeOptions): Promise<void> {
     if (aiAgents) {
       const { ImpactAnalyzer } = await import('../services/impact-analyzer');
       const impactAnalyzer = new ImpactAnalyzer(logger);
-      const impact = await impactAnalyzer.shouldUpdateDocs(gitDiff, 'readme', aiAgents); // Use correct type handling
+      const shouldProceed = await impactAnalyzer.checkWithLogging(gitDiff, 'readme', aiAgents, options.force);
 
-      if (!impact.update && !options.force) {
-        logger.success(`✨ Impact Analysis: No relevant changes detected. Skipping generation.\n   Reason: ${impact.reason}`);
-        return;
-      } else if (impact.update) {
-        logger.info(`✨ Impact Analysis: Update required. Reason: ${impact.reason}`);
-      }
+      if (!shouldProceed) return;
     }
   }
 

@@ -206,14 +206,11 @@ export async function documentationCommand(options: DocumentationOptions): Promi
     if (gitDiff) {
       const { ImpactAnalyzer } = await import('../services/impact-analyzer');
       const impactAnalyzer = new ImpactAnalyzer(logger);
-      const impact = await impactAnalyzer.shouldUpdateDocs(gitDiff, 'documentation', aiAgents);
+      // For docs, we treat 'site' mode as potentially force-like or needing structural updates, 
+      // but for now let's apply the same logic. If semantic check fails, we skip.
+      const shouldProceed = await impactAnalyzer.checkWithLogging(gitDiff, 'documentation', aiAgents, options.site);
 
-      if (!impact.update && !options.site) { // In --site mode, we might want to regenerate structure anyway? Maybe safe to skip too.
-        logger.success(`✨ Impact Analysis: No relevant changes detected. Skipping generation.\n   Reason: ${impact.reason}`);
-        return;
-      } else if (impact.update) {
-        logger.info(`✨ Impact Analysis: Update required. Reason: ${impact.reason}`);
-      }
+      if (!shouldProceed) return;
     }
   } catch (error) {
     s.stop('Analysis failed');
