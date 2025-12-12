@@ -4,27 +4,7 @@ This document provides a comprehensive reference for all available CLI commands 
 
 ## Available Commands
 
-### 1. `init`
-
-The `init` command initializes the project environment. It sets up necessary configurations and prepares the workspace for development.
-
-#### Usage
-```bash
-npm run init
-```
-
-#### Description
-- Creates a `sintesi.config.json` file with user-provided settings.
-- Scans all TypeScript files in the project root.
-- Extracts exported symbols and creates documentation anchors in `api.md`.
-- Generates `sintesi-map.json` with code signatures and hash tracking.
-
-#### Options
-- `--force`: Overwrites existing configurations without prompting.
-
----
-
-### 2. `check`
+### 1. `check`
 
 The `check` command verifies that documentation is in sync with code by detecting drift.
 
@@ -34,56 +14,75 @@ npm run check
 ```
 
 #### Description
-- Validates project configurations.
-- Checks for missing or incompatible dependencies.
-- Reports any issues found in the codebase.
+- Performs a smart check to validate that the README is in sync with the codebase.
+- Saves context for other commands to consume if drift is detected.
 
 #### Options
 - `--verbose`: Provides detailed output of the checks performed.
-- `--smart`: Enables high-level drift detection without requiring a map file.
-- `--map <path>`: Specifies the path to the map file (overrides the config).
+- `--base <branch>`: Specifies the base branch for comparison (default is `main`).
+
+#### Usage Examples
+```bash
+npm run check -- --verbose --base main
+```
 
 ---
 
-### 3. `fix`
+### 2. `readme`
 
-The `fix` command is used to automatically correct issues identified in the project documentation.
-
-#### Usage
-```bash
-npm run fix
-```
-
-#### Description
-- Fixes documentation drift by updating Markdown files with AI-generated content.
-- Prunes missing entries from the documentation if specified.
-
-#### Options
-- `--dry-run`: Simulates the fixes without applying them, allowing users to review changes beforehand.
-- `--prune`: Removes missing entries from the documentation.
-
----
-
-### 4. `generate`
-
-The `generate` command creates documentation content using AI.
+The `readme` command generates or updates the README file for the project.
 
 #### Usage
 ```bash
-npm run generate
+npm run readme
 ```
 
 #### Description
-- Generates documentation content based on the current codebase using AI models.
-- This command is effectively a semantic alias for the `fix` command but focused on content generation.
+- Creates or updates the README file based on the current project context.
+- Integrates recent code changes and suggestions from previous checks.
 
 #### Options
-- `--map <path>`: Specifies the path to the map file (overrides the config).
+- `--output <path>`: Specifies the output path for the README file (default is `README.md`).
+- `--force`: Forces an update even if the README already exists.
 - `--verbose`: Provides detailed output during the generation process.
 
+#### Usage Examples
+```bash
+npm run readme -- --output README.md --force
+```
+
 ---
 
-### 5. `documentation`
+### 3. `changeset`
+
+The `changeset` command generates changesets from code changes using AI.
+
+#### Usage
+```bash
+npm run changeset
+```
+
+#### Description
+- Analyzes git diff to find changed files.
+- Uses AI to determine version type (major/minor/patch) and description.
+- Generates a changeset file in the `.changeset` directory.
+
+#### Options
+- `--base <branch>`: Specifies the base branch for comparison (default is `main`).
+- `--staged-only`: Analyzes only staged changes.
+- `--output-dir <path>`: Specifies the output directory for the changeset file (default is `.changeset`).
+- `--no-ai`: Disables AI usage for version type and description.
+- `--interactive`: Enables interactive package selection.
+- `--verbose`: Provides detailed output during the changeset generation process.
+
+#### Usage Examples
+```bash
+npm run changeset -- --base main --staged-only
+```
+
+---
+
+### 4. `documentation`
 
 The `documentation` command automates the generation of project documentation based on the current codebase.
 
@@ -99,24 +98,6 @@ npm run documentation
 #### Options
 - `--output-dir <path>`: Specifies the output directory for the generated documentation.
 - `--verbose`: Provides detailed output during the documentation process.
-
----
-
-### 6. `readme`
-
-The `readme` command generates or updates the README file for the project.
-
-#### Usage
-```bash
-npm run readme
-```
-
-#### Description
-- Creates or updates the README file based on the current project state.
-- Ensures that all necessary information is included and formatted correctly.
-
-#### Options
-- `--overwrite`: Overwrites the existing README file without prompting.
 
 ---
 

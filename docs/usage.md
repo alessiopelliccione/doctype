@@ -37,18 +37,16 @@ npx sintesi check [options]
 
 #### Options
 
-- `--map <path>`: Path to sintesi-map.json (default: `./sintesi-map.json`)
 - `--verbose`: Enable detailed output (default: `false`)
 - `--strict`: Exit with error code on drift (default: `true`)
+- `--smart`: Use AI to detect high-level drift (default: `true`)
+- `--base <branch>`: Base branch for smart check comparison (default: `origin/main`)
 
 #### Example
 
 ```bash
 # Basic check
 npx sintesi check
-
-# Check with custom map location
-npx sintesi check --map ./docs/sintesi-map.json
 
 # Check with verbose output
 npx sintesi check --verbose
@@ -57,105 +55,7 @@ npx sintesi check --verbose
 npx sintesi check --no-strict
 ```
 
-### 2. Fix Documentation Drift
-
-Updates documentation when drift is detected, using AI or placeholder content.
-
-```bash
-npx sintesi fix [options]
-```
-
-#### Options
-
-- `--map <path>`: Path to sintesi-map.json (default: `./sintesi-map.json`)
-- `--dry-run`: Preview changes without writing (default: `false`)
-- `--auto-commit`: Auto-commit changes to git (default: `false`)
-- `--no-ai`: Use placeholder instead of AI (default: `false`)
-- `--verbose`: Enable detailed output (default: `false`)
-
-#### Example
-
-```bash
-# Fix with AI-generated content (requires OPENAI_API_KEY)
-npx sintesi fix
-
-# Preview changes without writing files
-npx sintesi fix --dry-run
-
-# Fix and automatically commit changes
-npx sintesi fix --auto-commit
-
-# Fix without AI (use placeholder content)
-npx sintesi fix --no-ai
-
-# Fix with verbose output
-npx sintesi fix --verbose
-```
-
-### 3. Initialize Sintesi
-
-Initializes Sintesi by scanning the codebase and creating documentation anchors based on the selected strategy.
-
-```bash
-npx sintesi init [options]
-```
-
-#### Options
-
-- `--docs <path>`: Documentation directory to scan (default: `./docs`)
-- `--map <path>`: Output path for sintesi-map.json (default: `./sintesi-map.json`)
-- `--verbose`: Enable detailed output (default: `false`)
-
-#### Example
-
-```bash
-# Initialize with default settings
-npx sintesi init
-
-# Initialize with custom docs directory
-npx sintesi init --docs ./documentation
-
-# Initialize with custom map location
-npx sintesi init --map ./custom-map.json
-```
-
-### 4. Generate Documentation Content
-
-Generates documentation content using AI.
-
-```bash
-npx sintesi generate [options]
-```
-
-#### Options
-
-- `--map <path>`: Path to sintesi-map.json (overrides config)
-- `--verbose`: Enable detailed output (default: `false`)
-- `--dry-run`: Preview changes without writing files (default: `false`)
-- `--auto-commit`: Automatically commit changes with git (default: `false`)
-- `--interactive`: Prompt before each generation (future feature, default: `false`)
-- `--no-ai`: Disable AI-generated content (use placeholder instead) (default: `false`)
-
-#### Example
-
-```bash
-# Generate documentation content with AI
-npx sintesi generate
-
-# Preview changes without writing files
-npx sintesi generate --dry-run
-
-# Generate and automatically commit changes
-npx sintesi generate --auto-commit
-
-# Generate without AI (use placeholder content)
-npx sintesi generate --no-ai
-
-# Generate with verbose output
-npx sintesi generate --verbose
-```
-
-### 5. Generate Changesets
+### 2. Generate Changesets
 
 Generates changesets from code changes using AI.
 
@@ -165,6 +65,11 @@ npx sintesi changeset [options]
 
 #### Options
 
+- `--base-branch <branch>`: Base branch to compare against (default: `main`)
+- `--staged-only`: Only analyze staged changes (default: `false`)
+- `--package-name <name>`: Package name for the changeset (auto-detected from package.json if not specified)
+- `--output-dir <path>`: Output directory for changeset (default: `.changeset`)
+- `--skip-ai`: Skip AI processing (default: `false`)
 - `--verbose`: Enable detailed output (default: `false`)
 
 #### Example
@@ -172,6 +77,53 @@ npx sintesi changeset [options]
 ```bash
 # Generate changesets with verbose output
 npx sintesi changeset --verbose
+```
+
+### 3. Generate Documentation
+
+Generates comprehensive documentation site structure.
+
+```bash
+npx sintesi documentation [options]
+```
+
+#### Options
+
+- `--output-dir <path>`: Output directory (default: `docs`)
+- `--verbose`: Enable detailed output (default: `false`)
+
+#### Example
+
+```bash
+# Generate documentation with default settings
+npx sintesi documentation
+
+# Generate documentation with custom output directory
+npx sintesi documentation --output-dir ./custom-docs
+```
+
+### 4. Generate README
+
+Generates a README.md based on project context.
+
+```bash
+npx sintesi readme [options]
+```
+
+#### Options
+
+- `--output <path>`: Output file path (default: `README.md`)
+- `--force`: Overwrite existing file (default: `false`)
+- `--verbose`: Enable verbose logging (default: `false`)
+
+#### Example
+
+```bash
+# Generate README with default settings
+npx sintesi readme
+
+# Generate README and overwrite existing file
+npx sintesi readme --force
 ```
 
 ## Library Usage

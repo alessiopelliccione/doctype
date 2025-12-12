@@ -85,43 +85,53 @@ After the installation is complete, you can run various scripts defined in the `
    pnpm run test
    ```
 
-## Generating Documentation
+## Using Sintesi CLI
 
-To automate the generation of project documentation, you can run:
+To automate the generation and maintenance of project documentation, you can use the Sintesi CLI tool. Here are some commands:
 
-```bash
-sintesi generate
-```
+- **Check for Documentation Drift**
 
-To check for documentation drift, use:
+   To check if the documentation is in sync with the code, run:
 
-```bash
-sintesi check
-```
+   ```bash
+   npx sintesi check
+   ```
 
-To fix outdated documentation, run:
+   You can also use the `--verbose` option for detailed output:
 
-```bash
-sintesi fix
-```
+   ```bash
+   npx sintesi check --verbose
+   ```
 
-To generate a README file based on your project structure, execute:
+- **Fix Outdated Documentation**
 
-```bash
-sintesi readme
-```
+   To update documentation when drift is detected, use:
 
-To build the documentation site, use:
+   ```bash
+   npx sintesi fix
+   ```
 
-```bash
-pnpm run docs:build
-```
+   You can preview changes without writing them using the `--dry-run` option:
 
-For a preview of the documentation, run:
+   ```bash
+   npx sintesi fix --dry-run
+   ```
 
-```bash
-pnpm run docs:preview
-```
+- **Generate a README File**
+
+   To create a README file based on your project structure, execute:
+
+   ```bash
+   npx sintesi readme
+   ```
+
+- **Generate Documentation**
+
+   To automatically create documentation using AI, run:
+
+   ```bash
+   npx sintesi documentation
+   ```
 
 ## Environment Configuration
 

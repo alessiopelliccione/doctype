@@ -49,9 +49,7 @@ sintesi
 ```
 
 You'll be presented with a menu to:
-- **Initialize** your project
 - **Check** for documentation drift
-- **Fix** outdated documentation
 - **Generate** new content
 - **Create Changesets**
 - **Generate README** - Create a README file based on your project structure
@@ -61,9 +59,14 @@ You'll be presented with a menu to:
 
 If you prefer scripting or know exactly what you want:
 
-**Initialize Tracking:**
+**Check for Drift:**
 ```bash
-sintesi init
+sintesi check
+```
+
+**Smart Check for README Updates:**
+```bash
+sintesi check --smart
 ```
 
 **Generate Content (AI):**
@@ -71,24 +74,9 @@ sintesi init
 sintesi generate
 ```
 
-**Check for Drift:**
-```bash
-sintesi check
-```
-
-**Fix Drift (Update Docs):**
-```bash
-sintesi fix
-```
-
 **Generate a README file:**
 ```bash
 sintesi readme
-```
-
-**Smart Check for README Updates:**
-```bash
-sintesi check --smart
 ```
 
 **Create Changesets:**
@@ -189,37 +177,15 @@ const token = await login('user@example.com', 'securePassword123');
 
 ## New Features
 
-### AI Model Routing Architecture
+### CLI Command Refactor
 
-Sintesi now implements a **Model Routing** architecture to optimize interactions with AI models. This feature introduces two distinct roles for AI agents:
+Recent changes have simplified the CLI commands. The following commands have been **removed**:
+- `init`
+- `fix`
+- `generate`
+- `menu`
 
-- **Planner**: Responsible for reasoning and strategy.
-- **Writer**: Focused on efficient content generation.
-
-#### Default Models (Configurable via Environment Variables)
-
-The CLI automatically selects appropriate models based on the detected API key provider:
-
-- **OpenAI API Key (`OPENAI_API_KEY`)**:
-  - **Planner**: `o1-mini` (advanced reasoning model for strategic tasks).
-  - **Writer**: `gpt-4o-mini` (efficient model for text generation).
-- **Gemini API Key (`GEMINI_API_KEY`)**:
-  - **Planner**: `gemini-1.5-flash`
-  - **Writer**: `gemini-1.5-flash-001`
-- **Anthropic API Key (`ANTHROPIC_API_KEY`)**:
-  - **Planner**: `claude-3-5-haiku-20241022`
-  - **Writer**: `claude-3-5-haiku-20241022`
-- **Mistral API Key (`MISTRAL_API_KEY`)**:
-  - **Planner**: `mistral-large-latest`
-  - **Writer**: `mistral-small-latest`
-
-You can override these defaults by setting `SINTESI_PLANNER_MODEL_ID` and `SINTESI_WRITER_MODEL_ID` in your environment variables.
-
-#### Agent Roles in CLI Commands
-
-| Command | Uses Planner/Writer? | Planner Role (e.g., `o1-mini`) | Writer Role (e.g., `gpt-4o-mini`) | Main AI Input | Notes |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **`documentation`** | **YES (Full)** | **The Architect**: Analyzes `package.json`, file structure, and dependency graph to define the strategy and optimal structure for a multi-page documentation site (JSON plan). | **The Builder**: Receives the detailed plan from the Planner, reads specific source code files and associated tests, and physically writes each Markdown page. |
+The `check` command now defaults to using smart drift detection.
 
 ---
 
@@ -261,53 +227,6 @@ $ sintesi changeset
 ℹ AI determined version type: minor
 ✔ Generated changeset: .changeset/calm-eagles-listen.md
 ```
-
-### `sintesi init`
-
-Initialize sintesi in your project with an interactive setup process.
-
-```bash
-sintesi init
-```
-
-**What it does:**
-1. Prompts you for project configuration (name, root directory, docs folder)
-2. **Scans all TypeScript files** in your project root
-3. **Extracts all exported symbols** (functions, classes, interfaces, types, enums)
-4. **Creates documentation files** in your docs folder (structure depends on selected strategy)
-5. Generates SHA256 hashes of all code signatures
-6. Creates `sintesi-map.json` to track everything (commit this)
-7. Creates `sintesi.config.json` with project configuration (commit this)
-
-**Initial anchors are created with TODO placeholders:**
-```markdown
-<!-- sintesi:start id="uuid" code_ref="src/file.ts#SymbolName" -->
-<!-- TODO: Add documentation for this symbol -->
-<!-- sintesi:end id="uuid" -->
-```
-
-You can then manually document each symbol or use `sintesi generate` to auto-fill with AI.
-
-### `sintesi generate`
-
-Generate documentation content using AI.
-
-```bash
-sintesi generate
-```
-
-**Options:**
-- `--dry-run` - Preview generation without writing files
-- `--auto-commit` - Automatically commit changes to git
-- `--no-ai` - Use placeholder content instead of AI generation
-- `--verbose` - Show detailed output
-
-**What it does:**
-1. Scans for "TODO" placeholders in your documentation
-2. Detects documentation drift (out of sync code)
-3. Sends code context to your AI provider
-4. Injects intelligent, generated documentation
-5. Updates `sintesi-map.json` hashes
 
 ### `sintesi check`
 
