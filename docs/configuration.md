@@ -8,7 +8,7 @@ This document provides comprehensive instructions on how to configure the Comman
 
 Before configuring the CLI tool, ensure that you have the following:
 
-- **Node.js**: Version 14.x or higher.
+- **Node.js**: Version 20.x or higher.
 - **pnpm**: Ensure `pnpm` is installed globally. You can install it using npm:
   ```bash
   npm install -g pnpm
@@ -104,12 +104,7 @@ const apiUrl = process.env.API_URL;
 
 The following commands are available in the `packages/cli/src/commands` directory:
 
-- **init**: Initializes a new project or package.
-- **fix**: Applies fixes to the codebase.
-- **menu**: Displays the CLI menu options.
-- **changeset**: Manages changesets for versioning.
-- **generate**: Generates files or resources based on templates.
-- **check**: Performs checks on the codebase.
+- **check**: Performs checks on the codebase using smart drift detection.
 - **readme**: Generates or updates the README file.
 - **documentation**: Automates the generation of documentation.
 
