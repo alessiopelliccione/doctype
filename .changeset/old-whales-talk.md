@@ -1,5 +1,5 @@
 ---
-"@sintesi/sintesi": major
+"@sintesi/sintesi": minor
 ---
 
 - BREAKING: Refactor AI agent initialization to support planner and writer roles
