@@ -80,8 +80,13 @@ export async function checkCommand(options: CheckOptions): Promise<CheckResult> 
   // Save State for subsequent pipeline steps
   try {
     const sintesiDir = resolve(process.cwd(), '.sintesi');
-    if (!existsSync(sintesiDir)) mkdirSync(sintesiDir, { recursive: true });
-    
+          if (!existsSync(sintesiDir)) mkdirSync(sintesiDir, { recursive: true });
+          
+          const sintesiGitignorePath = join(sintesiDir, '.gitignore');
+          if (!existsSync(sintesiGitignorePath)) {
+            writeFileSync(sintesiGitignorePath, '*');
+            logger.debug(`Created .gitignore in ${sintesiDir}`);
+          }    
     const statePath = join(sintesiDir, 'state.json');
     writeFileSync(statePath, JSON.stringify({
       timestamp: Date.now(),
