@@ -164,6 +164,25 @@ export class SmartChecker {
             if (gitDiff.length > 8000) {
                 gitDiff = gitDiff.substring(0, 8000) + '\n... (truncated)';
             }
+
+            // FILTER: Remove README.md changes from the diff to prevent self-triggering
+            // We split by "diff --git" and remove chunks that belong to README.md
+            const chunks = gitDiff.split('diff --git ');
+            const relevantChunks: string[] = [];
+
+            for (const chunk of chunks) {
+                if (!chunk.trim()) continue;
+                const firstLine = chunk.split('\n')[0];
+                if (firstLine.toLowerCase().includes('readme.md')) continue;
+                relevantChunks.push('diff --git ' + chunk);
+            }
+
+            gitDiff = relevantChunks.join('\n');
+
+            if (!gitDiff.trim()) {
+                this.logger.debug('No code changes detected (after filtering README changes).');
+                return { hasDrift: false };
+            }
         } catch (error) {
             this.logger.warn('Failed to get changes: ' + error);
             return { hasDrift: false };

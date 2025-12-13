@@ -45,7 +45,7 @@ export class ImpactAnalyzer {
         }
 
         // 1. Clean the diff (remove lockfiles, noise)
-        const cleanDiff = this.cleanDiff(gitDiff);
+        const cleanDiff = this.cleanDiff(gitDiff, docType);
 
         // 2. Safety Check: Truncation Risk
         // If the cleaned diff is still massive, we risk truncating critical changes.
@@ -125,7 +125,7 @@ Return a JSON object:
     /**
      * Filters out noisy files from the git diff to save tokens and improve focus.
      */
-    private cleanDiff(fullDiff: string): string {
+    private cleanDiff(fullDiff: string, docType?: 'readme' | 'documentation'): string {
         // Simple line-based filtering or chunk-based filtering.
         // Git diffs usually look like:
         // diff --git a/foo.ts b/foo.ts
@@ -149,6 +149,13 @@ Return a JSON object:
                 firstLine.includes('.snap') ||
                 firstLine.includes('.DS_Store')
             ) {
+                continue;
+            }
+
+            // Self-Trigger Prevention:
+            // If we are checking "Should I update README?", we should ignore changes to README itself.
+            // Otherwise, every time we update README, it counts as a "change" which might trigger another update.
+            if (docType === 'readme' && firstLine.toLowerCase().includes('readme.md')) {
                 continue;
             }
 
