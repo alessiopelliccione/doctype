@@ -129,6 +129,9 @@ export async function readmeCommand(options: ReadmeOptions): Promise<void> {
     }
   } else if (options.force) {
     logger.info('Force flag detected: ignoring existing README and regenerating from scratch.');
+    // Explicitly ensure we are in "Create New" mode
+    existingContent = '';
+    isUpdate = false;
   }
 
 

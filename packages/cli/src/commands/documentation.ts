@@ -326,11 +326,10 @@ export async function documentationCommand(options: DocumentationOptions): Promi
 
   let existingDocsList: string[] = [];
   try {
-    // If FORCE mode, we ignore existing files for planning purposes to force a fresh perspective
-    if (!options.force) {
-      const allFiles = getAllFiles(outputDir);
-      existingDocsList = allFiles.map(f => relative(outputDir, f));
-    }
+    // Always list existing files so the planner is aware of them (avoiding "zombie files")
+    // Even in FORCE mode, knowing what exists helps the planner decide whether to rename or replace.
+    const allFiles = getAllFiles(outputDir);
+    existingDocsList = allFiles.map(f => relative(outputDir, f));
   } catch (e) {
     // Ignore error if docs folder doesn't exist or is empty
   }
@@ -341,14 +340,15 @@ export async function documentationCommand(options: DocumentationOptions): Promi
 
   /*
    * STRATEGY SELECTION
-   * If we found existing docs, we switch to "Improvement Mode" rather than "Greenfield Mode".
+   * If we found existing docs AND we are not forcing, we switch to "Improvement Mode".
+   * If force is active, we stay in "Greenfield Mode" (aggressive) but the planner still sees the file list.
    */
   const hasExistingDocs = existingDocsList.length > 0;
 
   // Base instructions for the planner
   let strategyInstructions = '';
 
-  if (hasExistingDocs) {
+  if (hasExistingDocs && !options.force) {
     strategyInstructions = `
 ### Strategy: IMPROVEMENT MODE (Existing Docs Detected)
 - **RESPECT EXISTING STRUCTURE**: The user has an existing documentation structure. Do NOT propose completely new filenames unless the current ones are insufficient.
